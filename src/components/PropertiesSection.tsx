@@ -27,13 +27,26 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
 
   const handleBookNowClick = (e: React.MouseEvent, prop: Property) => {
     e.stopPropagation();
+
+    if (prop.otaStatus === 'coming_soon' || !prop.bookingUrl) {
+      // Coming soon - route to WhatsApp inquiry directly without fake URLs
+      recordTrackingEvent({
+        type: 'WHATSAPP_CLICK',
+        propertyId: prop.id,
+        propertyName: prop.name,
+        metadata: 'PropertiesSection Card CTA - Coming Soon Direct WhatsApp',
+      });
+      onOpenWhatsAppInquiry(prop);
+      return;
+    }
+
     // Record tracking event for SEM / Analytics
     recordTrackingEvent({
       type: 'BOOKING_CLICK',
       propertyId: prop.id,
       propertyName: prop.name,
       targetUrl: prop.bookingUrl,
-      metadata: `PropertiesSection Card CTA - ${prop.bookingUrlKey}`,
+      metadata: `PropertiesSection Card CTA - ${prop.bookingUrlKey} (${prop.otaName})`,
     });
 
     window.open(prop.bookingUrl, '_blank', 'noopener,noreferrer');
@@ -177,9 +190,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                       </span>
                     </div>
                     <span className="text-[10px] text-[#A69B93] block mt-0.5">
-                      {currentLang === 'id'
-                        ? 'Tarif langsung & ketersediaan terverifikasi di Booking.com'
-                        : 'Real-time rates & dates confirmed on Booking.com'}
+                      {currentLang === 'id' ? property.priceNoteId : property.priceNoteEn}
                     </span>
                   </div>
                 </div>
@@ -207,15 +218,31 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                     </button>
                   </div>
 
-                  {/* Primary Direct Booking.com Button - Specific to this property */}
-                  <button
-                    type="button"
-                    onClick={(e) => handleBookNowClick(e, property)}
-                    className="w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>{t.propertiesSection.bookOnBooking}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-[#E5DFC5]" />
-                  </button>
+                  {/* Primary Direct OTA / Booking Button - Specific to this property */}
+                  {property.otaStatus === 'coming_soon' || !property.bookingUrl ? (
+                    <button
+                      type="button"
+                      onClick={(e) => handleBookNowClick(e, property)}
+                      className="w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-[#7B6E66] bg-[#EFECE6] hover:bg-[#E5DFC5] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                      title="Online OTA booking coming soon. Inquire directly via WhatsApp."
+                    >
+                      <span className="tracking-widest font-bold">COMING SOON</span>
+                      <MessageSquare className="w-3.5 h-3.5 text-[#8B6B3E]" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={(e) => handleBookNowClick(e, property)}
+                      className="w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>
+                        {currentLang === 'id'
+                          ? `Pesan di ${property.otaName}`
+                          : `Book on ${property.otaName}`}
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5 text-[#E5DFC5]" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -159,7 +159,9 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({
                   {showRedirectNotice.property.name}
                 </h3>
                 <p className="text-xs text-[#7B6E66] mt-0.5">
-                  Official Booking.com Listing
+                  {showRedirectNotice.property.otaStatus === 'coming_soon'
+                    ? 'Online OTA Listing: Coming Soon'
+                    : `Official ${showRedirectNotice.property.otaName} Listing`}
                 </p>
               </div>
             </div>
@@ -168,18 +170,33 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-[#8B6B3E] shrink-0 mt-0.5" />
                 <span>
-                  {currentLang === 'id'
-                    ? 'Anda akan dialihkan ke halaman resmi Booking.com milik properti ini. Silakan konfirmasi tanggal check-in dan tipe kamar yang Anda inginkan di halaman Booking.com.'
-                    : 'You are being redirected to this property’s official Booking.com page. Please confirm your desired check-in dates and select your room type on Booking.com.'}
+                  {showRedirectNotice.property.otaStatus === 'coming_soon' || !showRedirectNotice.property.bookingUrl
+                    ? currentLang === 'id'
+                      ? 'Pemesanan online melalui OTA untuk The Wina Villa 02 sedang dipersiapkan. Silakan hubungi WhatsApp concierge resmi kami untuk informasi ketersediaan dan reservasi langsung.'
+                      : 'Online OTA booking for The Wina Villa 02 is coming soon. Please contact our official WhatsApp concierge for availability and direct reservations.'
+                    : currentLang === 'id'
+                    ? `Anda akan dialihkan ke halaman resmi ${showRedirectNotice.property.otaName} milik properti ini. Silakan konfirmasi tanggal check-in dan tipe kamar yang Anda inginkan di halaman ${showRedirectNotice.property.otaName}.`
+                    : `You are being redirected to this property’s official ${showRedirectNotice.property.otaName} page. Please confirm your desired check-in dates and select your room type on ${showRedirectNotice.property.otaName}.`}
                 </span>
               </div>
               <div className="pt-2 border-t border-[#D8CBB5]/60 text-[11px] text-[#7B6E66]">
                 <strong>Selected Property:</strong> {showRedirectNotice.property.name}
                 <br />
-                <strong>Direct URL:</strong>{' '}
-                <span className="font-mono text-[#8B6B3E] break-all">
-                  {showRedirectNotice.property.bookingUrl}
-                </span>
+                {showRedirectNotice.property.bookingUrl ? (
+                  <>
+                    <strong>Direct URL:</strong>{' '}
+                    <span className="font-mono text-[#8B6B3E] break-all">
+                      {showRedirectNotice.property.bookingUrl}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <strong>Status:</strong>{' '}
+                    <span className="font-semibold text-[#8B6B3E]">
+                      OTA Listing Coming Soon
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -189,16 +206,38 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({
                 onClick={() => setShowRedirectNotice({ open: false })}
                 className="px-4 py-2 text-xs font-semibold text-[#7B6E66] hover:text-[#2C221E] transition-colors"
               >
-                {currentLang === 'id' ? 'Batal' : 'Cancel'}
+                {currentLang === 'id' ? 'Tutup' : 'Close'}
               </button>
-              <button
-                type="button"
-                onClick={handleProceedToBooking}
-                className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#B38F56] hover:bg-[#A37E45] rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>{currentLang === 'id' ? 'Lanjutkan ke Booking.com' : 'Continue to Booking.com'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </button>
+              {showRedirectNotice.property.otaStatus === 'coming_soon' || !showRedirectNotice.property.bookingUrl ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const prop = showRedirectNotice.property;
+                    setShowRedirectNotice({ open: false });
+                    const text = encodeURIComponent(
+                      `Hello The Wina Hospitality! I would like to inquire about booking ${prop?.name || 'Villa 02'} in Canggu Bali.`
+                    );
+                    window.open(`https://wa.me/6281239876543?text=${text}`, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#1F5C3E] hover:bg-[#16452E] rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>{currentLang === 'id' ? 'Chat via WhatsApp' : 'Inquire via WhatsApp'}</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleProceedToBooking}
+                  className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#B38F56] hover:bg-[#A37E45] rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>
+                    {currentLang === 'id'
+                      ? `Lanjutkan ke ${showRedirectNotice.property.otaName}`
+                      : `Continue to ${showRedirectNotice.property.otaName}`}
+                  </span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>

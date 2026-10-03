@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, ExternalLink, MessageSquare, ShieldCheck, MapPin, Check, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ExternalLink, MessageSquare, ShieldCheck, MapPin, Check, ChevronRight, Info } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import { Language } from '@/src/data/translations';
 import { ContactConfig, recordTrackingEvent } from '@/src/config/ownerStore';
@@ -21,32 +21,64 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
 }) => {
   const campaigns = [
     {
-      id: 'echo-beach-sem',
-      keyword: 'Accommodation near Echo Beach',
-      headline: 'Stay Steps from Echo Beach, Canggu',
-      subheadline: 'Comfortable boutique guest house 350m from world-class surf, cafes, and sunset spots.',
+      id: 'campaign-1-echo-beach',
       propertyId: 'echo-beach',
+      title: 'Campaign 1: Echo Beach',
+      keyword: 'guest house near Echo Beach',
+      allKeywords: ['guest house near Echo Beach', 'guest house Canggu', 'cheap accommodation Canggu', 'stay near Batu Bolong'],
+      landingUrl: '/properties/the-wina-echo-beach-guest-house',
+      headline: 'The Wina Echo Beach Guest House | Stay in Canggu, Bali',
+      subheadline: 'Comfortable boutique guest house located just 350 meters from Echo Beach surf and Batu Bolong.',
+      ctaText: 'BOOK NOW',
+      ctaChannel: 'Booking.com Echo Beach',
     },
     {
-      id: 'canggu-villa-sem',
-      keyword: 'Villa in Canggu',
-      headline: 'Private Pool Villas in Canggu, Bali',
-      subheadline: 'Exclusive 100% private pool sanctuary with tropical open-living design and serene privacy.',
-      propertyId: 'villa-01',
-    },
-    {
-      id: 'canggu-guesthouse-sem',
-      keyword: 'Guest house in Canggu',
-      headline: 'Peaceful Guest House Near Batu Bolong',
-      subheadline: 'Air-conditioned rooms, crystal pool, fiber WiFi, and quiet sleep in Canggu.',
+      id: 'campaign-2-guest-house-2',
       propertyId: 'guest-house-2',
+      title: 'Campaign 2: Guest House 2',
+      keyword: 'cheap guest house Canggu',
+      allKeywords: ['cheap guest house Canggu', 'affordable stay Canggu', 'accommodation near Jalan Nelayan'],
+      landingUrl: '/properties/the-wina-guest-house-2',
+      headline: 'The Wina Guest House 2 | Affordable Stay in Canggu',
+      subheadline: 'Discover an affordable stay in Canggu, Bali at The Wina Guest House 2, located near Jalan Nelayan (Property ID: 2037301).',
+      ctaText: 'BOOK NOW',
+      ctaChannel: 'Booking.com Guest House 2 (ID: 2037301)',
     },
     {
-      id: 'affordable-bali-sem',
-      keyword: 'Affordable accommodation in Bali',
-      headline: 'Best Value Quality Stays in Canggu',
-      subheadline: 'Transparent pricing, hotel-grade cleanliness, fast internet, and warm Balinese hospitality.',
+      id: 'campaign-3-guest-house-3',
       propertyId: 'guest-house-3',
+      title: 'Campaign 3: Guest House 3',
+      keyword: 'guest house Batu Bolong',
+      allKeywords: ['guest house Batu Bolong', 'affordable accommodation Canggu', 'stay in Canggu Bali'],
+      landingUrl: '/properties/the-wina-guest-house-3',
+      headline: 'The Wina Guest House 3 | Comfortable Stay in Canggu',
+      subheadline: 'Enjoy a comfortable stay in Canggu, Bali at The Wina Guest House 3, conveniently located near Batu Bolong.',
+      ctaText: 'BOOK NOW',
+      ctaChannel: 'Booking.com Guest House 3',
+    },
+    {
+      id: 'campaign-4-villa-01',
+      propertyId: 'villa-01',
+      title: 'Campaign 4: Villa 01',
+      keyword: 'villa Canggu',
+      allKeywords: ['villa Canggu', 'villa near Batu Bolong', 'Bali villa Canggu'],
+      landingUrl: '/properties/the-wina-villa-01',
+      headline: 'The Wina Villa 01 | Villa Stay in Canggu, Bali',
+      subheadline: 'Exclusive private pool villa offering understated luxury, tropical open living, and total seclusion in Subak Canggu.',
+      ctaText: 'BOOK NOW',
+      ctaChannel: 'Trip.com Villa 01 (ID: 120788345)',
+    },
+    {
+      id: 'campaign-5-villa-02',
+      propertyId: 'villa-02',
+      title: 'Campaign 5: Villa 02',
+      keyword: 'villa in Canggu Bali',
+      allKeywords: ['villa in Canggu Bali', 'villa near Batu Bolong', 'Bali villa accommodation', 'Canggu villa'],
+      landingUrl: '/properties/the-wina-villa-02',
+      headline: 'The Wina Villa 02 | Bali Villa in Canggu',
+      subheadline: 'Spacious modern tropical villa with private plunge pool and lush courtyard in Subak Canggu (Online OTA listing coming soon).',
+      ctaText: 'LEARN MORE / CONTACT US',
+      ctaChannel: 'Direct WhatsApp Concierge',
     },
   ];
 
@@ -55,26 +87,44 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
   const activeCampaign = campaigns.find((c) => c.id === activeCampaignId) || campaigns[0];
   const activeProperty = properties.find((p) => p.id === activeCampaign.propertyId) || properties[0];
 
-  const handleBookNow = () => {
+  // Track property_view when switching campaigns
+  useEffect(() => {
     recordTrackingEvent({
-      type: 'BOOKING_CLICK',
+      type: 'property_view',
+      property: activeProperty.id,
+      propertyId: activeProperty.id,
+      propertyName: activeProperty.name,
+      metadata: `SEM Landing Campaign View: ${activeCampaign.title}`,
+    });
+  }, [activeCampaignId, activeProperty.id, activeProperty.name, activeCampaign.title]);
+
+  const handleBookNow = () => {
+    if (activeProperty.id === 'villa-02' || !activeProperty.bookingUrl) {
+      handleWhatsApp();
+      return;
+    }
+
+    recordTrackingEvent({
+      type: 'booking_click',
+      property: activeProperty.id,
       propertyId: activeProperty.id,
       propertyName: activeProperty.name,
       targetUrl: activeProperty.bookingUrl,
-      metadata: `Google Ads SEM Campaign: [${activeCampaign.keyword}]`,
+      metadata: `Google Ads SEM Booking Click: [${activeCampaign.keyword}] -> ${activeCampaign.ctaChannel}`,
     });
     window.open(activeProperty.bookingUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleWhatsApp = () => {
     recordTrackingEvent({
-      type: 'WHATSAPP_CLICK',
+      type: 'whatsapp_click',
+      property: activeProperty.id,
       propertyId: activeProperty.id,
       propertyName: activeProperty.name,
-      metadata: `Google Ads SEM WhatsApp: [${activeCampaign.keyword}]`,
+      metadata: `Google Ads SEM WhatsApp Click: [${activeCampaign.keyword}]`,
     });
     const text = encodeURIComponent(
-      `Hello The Wina Hospitality! I saw your Google Ads page for "${activeCampaign.keyword}" and would like to inquire about booking ${activeProperty.name}.`
+      `Hello The Wina Hospitality! I am inquiring about ${activeProperty.name} via your Google Ads link for "${activeCampaign.keyword}".`
     );
     window.open(`https://wa.me/${contactConfig.whatsappRaw}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
@@ -85,51 +135,66 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
         {/* SEM Switcher Header */}
         <div className="bg-[#2C221E] text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="text-[11px] uppercase tracking-widest text-[#C5A880] font-semibold">
-              Google Ads Campaign Landing Simulator
-            </span>
-            <h3 className="font-serif text-lg sm:text-xl font-semibold text-white">
-              Target Keyword: "{activeCampaign.keyword}"
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-widest text-[#C5A880] font-bold px-2 py-0.5 bg-white/10 rounded">
+                Google Ads Landing Page Architecture
+              </span>
+              <span className="text-[11px] text-[#A69B93]">Property-Specific Routing</span>
+            </div>
+            <h3 className="font-serif text-lg sm:text-xl font-semibold text-white mt-1">
+              {activeCampaign.title}: "{activeCampaign.keyword}"
             </h3>
           </div>
 
           <button
             onClick={onClose}
             className="self-end sm:self-auto p-1.5 text-white/80 hover:text-white rounded-full transition-colors cursor-pointer"
+            aria-label="Close SEM simulator"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Campaign Pills Switcher */}
+        {/* Campaign Pills Switcher (All 5 properties separate) */}
         <div className="bg-[#EFECE6] px-6 py-2.5 border-b border-[#E5DFC5] flex items-center gap-2 overflow-x-auto text-xs">
-          <span className="text-[#7B6E66] font-medium shrink-0">Simulate Ad Adgroup:</span>
+          <span className="text-[#7B6E66] font-semibold shrink-0">Switch Adgroup:</span>
           {campaigns.map((camp) => (
             <button
               key={camp.id}
               onClick={() => setActiveCampaignId(camp.id)}
-              className={`px-3 py-1 rounded-md text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 activeCampaignId === camp.id
                   ? 'bg-[#2C221E] text-white shadow-xs'
                   : 'bg-[#FAF8F5] text-[#5A4D45] hover:text-[#2C221E]'
               }`}
             >
-              {camp.keyword}
+              {camp.title.replace('Campaign ', 'Ad ')}
             </button>
           ))}
         </div>
 
         {/* High Conversion Landing Content */}
         <div className="overflow-y-auto p-6 sm:p-8 space-y-6">
+          {/* Target keywords badge banner */}
+          <div className="bg-[#FAF3E0] rounded-xl p-3 border border-[#E5DFC5] flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-1.5 text-[#8B6B3E] font-medium">
+              <span className="font-bold">Target Keywords:</span>
+              <span>{activeCampaign.allKeywords.join(' · ')}</span>
+            </div>
+            <div className="text-[#7B6E66] text-[11px] font-mono">
+              Landing URL: <span className="font-bold text-[#2C221E]">{activeCampaign.landingUrl}</span>
+            </div>
+          </div>
+
           <div className="text-center max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#B38F56] mb-2">
               <MapPin className="w-3.5 h-3.5" />
-              <span>Canggu, Bali · Verified Booking.com Listing</span>
+              <span>{activeProperty.neighborhood} · The Wina Hospitality</span>
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#2C221E] leading-tight mb-3">
               {activeCampaign.headline}
             </h1>
-            <p className="text-sm sm:text-base text-[#5A4D45]">
+            <p className="text-sm sm:text-base text-[#5A4D45] leading-relaxed">
               {activeCampaign.subheadline}
             </p>
           </div>
@@ -143,32 +208,30 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] uppercase font-semibold px-2 py-0.5 rounded">
+              <div className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider text-white bg-black/60 px-2 py-0.5 rounded">
                 {activeProperty.category === 'villa' ? 'Private Villa' : 'Boutique Guest House'}
               </div>
             </div>
 
             <div className="md:col-span-7 space-y-3">
-              <h2 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
+              <h4 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
                 {activeProperty.name}
-              </h2>
-              <p className="text-xs text-[#7B6E66] flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#B38F56]" />
-                <span>{activeProperty.distanceToBeach}</span>
-              </p>
-              <p className="text-xs sm:text-sm text-[#5A4D45] leading-relaxed">
-                {activeProperty.taglineEn}
+              </h4>
+              <p className="text-xs sm:text-sm text-[#7B6E66]">
+                {activeProperty.location}
               </p>
 
-              {/* Verified Checklist */}
-              <div className="grid grid-cols-2 gap-2 text-xs text-[#2C221E] pt-2">
+              {/* Verified Value Props */}
+              <div className="grid grid-cols-2 gap-2 text-xs text-[#5A4D45] pt-2">
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
                   <span>High-speed fiber WiFi</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
-                  <span>Swimming Pool</span>
+                  <span>
+                    {activeProperty.category === 'villa' ? 'Exclusive Private Pool' : 'Swimming Pool Access'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
@@ -180,11 +243,11 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
                 </div>
               </div>
 
-              {/* Price & Booking Notice */}
+              {/* Price Rule: Display "From RpXXX/night" without forbidden claims */}
               <div className="pt-3 border-t border-[#D8CBB5]/60 flex items-baseline gap-2">
                 <span className="text-xs text-[#7B6E66]">Starting from:</span>
-                <span className="font-serif text-lg font-bold text-[#2C221E] tabular-nums">
-                  IDR {activeProperty.startingPriceIdr.toLocaleString('id-ID')}
+                <span className="font-serif text-xl font-bold text-[#2C221E] tabular-nums">
+                  From Rp{activeProperty.startingPriceIdr.toLocaleString('id-ID')}
                 </span>
                 <span className="text-[11px] text-[#A69B93]">/ night</span>
               </div>
@@ -193,13 +256,25 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
 
           {/* Primary High-Intent Conversion Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <button
-              onClick={handleBookNow}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#2C221E] hover:bg-[#B38F56] text-white text-xs sm:text-sm font-semibold uppercase tracking-wider rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Book Now on Booking.com</span>
-              <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
-            </button>
+            {activeProperty.id === 'villa-02' ? (
+              /* Campaign 5: LEARN MORE / CONTACT US (No fake direct Book Now claiming immediate OTA availability) */
+              <button
+                onClick={handleWhatsApp}
+                className="w-full sm:w-auto px-8 py-3.5 bg-[#2C221E] hover:bg-[#B38F56] text-white text-xs sm:text-sm font-semibold uppercase tracking-wider rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <MessageSquare className="w-4 h-4 text-[#E5DFC5]" />
+                <span>LEARN MORE / CONTACT US</span>
+              </button>
+            ) : (
+              /* Campaigns 1-4: Direct BOOK NOW -> Property's Verified OTA */
+              <button
+                onClick={handleBookNow}
+                className="w-full sm:w-auto px-8 py-3.5 bg-[#2C221E] hover:bg-[#B38F56] text-white text-xs sm:text-sm font-semibold uppercase tracking-wider rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>BOOK NOW ({activeCampaign.ctaChannel})</span>
+                <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
+              </button>
+            )}
 
             <button
               onClick={handleWhatsApp}
@@ -208,11 +283,22 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
               <MessageSquare className="w-4 h-4" />
               <span>Inquire via WhatsApp</span>
             </button>
+
+            <button
+              onClick={() => {
+                onClose();
+                onSelectProperty(activeProperty);
+              }}
+              className="w-full sm:w-auto px-5 py-3.5 bg-[#FAF8F5] hover:bg-[#EFECE6] text-[#2C221E] border border-[#D8CBB5] text-xs sm:text-sm font-semibold uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>View Full Details</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
 
-          {/* Transparency Footer */}
-          <div className="text-center text-[11px] text-[#7B6E66] max-w-lg mx-auto pt-2">
-            Clicking "Book Now" opens this specific property's verified profile on Booking.com. All reservations and live room availability are confirmed securely on Booking.com.
+          {/* Tracking architecture notice */}
+          <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#E5DFC5] text-center text-[11px] text-[#7B6E66]">
+            Events tracked: <code className="text-[#2C221E] bg-[#EFECE6] px-1 py-0.5 rounded">property_view</code>, <code className="text-[#2C221E] bg-[#EFECE6] px-1 py-0.5 rounded">booking_click</code>, <code className="text-[#2C221E] bg-[#EFECE6] px-1 py-0.5 rounded">whatsapp_click</code> with property tag: <code className="text-[#B38F56] font-bold font-mono">property: "{activeProperty.id}"</code>.
           </div>
         </div>
       </div>

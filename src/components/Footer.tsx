@@ -174,7 +174,7 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <div className="bg-[#2D221E] p-4 rounded-xl border border-[#3E2F28] text-xs text-[#BDB5AE] leading-relaxed space-y-2">
               <p>
-                Each of our 5 properties possesses an independent Booking.com listing. Live rates, promotions, and real-time room availability are confirmed exclusively via Booking.com.
+                Each property possesses an independent verified OTA listing (Booking.com & Trip.com). Live rates, promotions, and real-time room availability are confirmed exclusively via the respective official OTA platform. For properties with OTA listings in preparation (The Wina Villa 02), direct inquiries are available via WhatsApp.
               </p>
               <p className="text-[11px] text-[#8E847D]">
                 The Wina Hospitality does not fabricate placeholder ratings or claim synchronization without verified platform confirmation.

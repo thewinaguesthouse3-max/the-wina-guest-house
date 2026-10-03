@@ -69,11 +69,11 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
     onSaveBookingUrls(urlsForm);
     // Also update individual property bookingUrls in properties array
     const updatedProps = propertiesState.map((p) => {
-      if (p.id === 'echo-beach') return { ...p, bookingUrl: urlsForm.bookingUrlEchoBeach };
-      if (p.id === 'guest-house-2') return { ...p, bookingUrl: urlsForm.bookingUrlGuestHouse2 };
-      if (p.id === 'guest-house-3') return { ...p, bookingUrl: urlsForm.bookingUrlGuestHouse3 };
-      if (p.id === 'villa-01') return { ...p, bookingUrl: urlsForm.bookingUrlVilla01 };
-      if (p.id === 'villa-02') return { ...p, bookingUrl: urlsForm.bookingUrlVilla02 };
+      if (p.id === 'echo-beach') return { ...p, bookingUrl: urlsForm.bookingUrlEchoBeach, otaName: 'Booking.com' as const, otaStatus: 'verified' as const };
+      if (p.id === 'guest-house-2') return { ...p, bookingUrl: urlsForm.bookingUrlGuestHouse2, otaName: 'Booking.com' as const, otaStatus: 'verified' as const, otaPropertyId: '2037301' };
+      if (p.id === 'guest-house-3') return { ...p, bookingUrl: urlsForm.bookingUrlGuestHouse3, otaName: 'Booking.com' as const, otaStatus: 'verified' as const };
+      if (p.id === 'villa-01') return { ...p, bookingUrl: urlsForm.bookingUrlVilla01, otaName: 'Trip.com' as const, otaStatus: 'verified' as const, otaPropertyId: '120788345' };
+      if (p.id === 'villa-02') return { ...p, bookingUrl: urlsForm.bookingUrlVilla02, otaName: (urlsForm.bookingUrlVilla02 ? 'Booking.com' : 'Coming Soon') as 'Booking.com' | 'Coming Soon', otaStatus: (urlsForm.bookingUrlVilla02 ? 'verified' : 'coming_soon') as 'verified' | 'coming_soon' };
       return p;
     });
     onSaveProperties(updatedProps);
@@ -158,7 +158,7 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
             }`}
           >
             <LinkIcon className="w-4 h-4 text-[#B38F56]" />
-            <span>Booking.com URLs (5 Properties)</span>
+            <span>OTA & Booking URLs (5 Properties)</span>
           </button>
 
           <button
@@ -210,16 +210,16 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
 
         {/* Modal Scrollable Body */}
         <div className="overflow-y-auto p-6 sm:p-8 flex-1 space-y-6">
-          {/* TAB 1: Booking.com URLs */}
+          {/* TAB 1: OTA & Booking URLs */}
           {activeTab === 'booking-urls' && (
             <form onSubmit={handleSaveUrls} className="space-y-6">
               <div className="bg-[#FAF3E0] border border-[#E5DFC5] p-4 rounded-xl text-xs text-[#5A4D45]">
                 <strong className="text-[#8B6B3E] block mb-1 flex items-center gap-1.5">
                   <Info className="w-4 h-4" />
-                  Independent Property URL Configuration
+                  Pemetaan Sumber Kebenaran OTA Property (Source of Truth)
                 </strong>
                 <span>
-                  Each property must retain its own distinct Booking.com listing link. When users click "Book Now" or "Check Availability", they will be directed specifically to the URL configured here.
+                  Setiap property memiliki channel OTA dan URL booking masing-masing. Jangan menggabungkan link, mengarahkan ke link property lain, atau membuat URL palsu. Untuk Villa 02 (Coming Soon), link OTA belum tersedia.
                 </span>
               </div>
 
@@ -227,18 +227,28 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                 {/* 1. Echo Beach */}
                 <div className="bg-[#FAF8F5] border border-[#E5DFC5] p-4 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#2C221E]">
-                      1. The Wina Echo Beach Guest House (`bookingUrlEchoBeach`)
-                    </label>
-                    <a
-                      href={urlsForm.bookingUrlEchoBeach}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
-                    >
-                      <span>Test link</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[#2C221E]">
+                          1. The Wina Echo Beach Guest House
+                        </label>
+                        <span className="text-[10px] font-semibold text-[#1F5C3E] bg-[#EAF5EF] px-2 py-0.5 rounded">
+                          OTA: Booking.com · Verified / Match
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66]">Harga website: Rp330.000/night</span>
+                    </div>
+                    {urlsForm.bookingUrlEchoBeach && (
+                      <a
+                        href={urlsForm.bookingUrlEchoBeach}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
+                      >
+                        <span>Test link</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                   <input
                     type="url"
@@ -252,18 +262,28 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                 {/* 2. Guest House 2 */}
                 <div className="bg-[#FAF8F5] border border-[#E5DFC5] p-4 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#2C221E]">
-                      2. The Wina Guest House 2 (`bookingUrlGuestHouse2`)
-                    </label>
-                    <a
-                      href={urlsForm.bookingUrlGuestHouse2}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
-                    >
-                      <span>Test link</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[#2C221E]">
+                          2. The Wina Guest House 2
+                        </label>
+                        <span className="text-[10px] font-semibold text-[#1F5C3E] bg-[#EAF5EF] px-2 py-0.5 rounded">
+                          OTA: Booking.com · ID: 2037301 · Verified / Match
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66]">Harga website: Rp250.000/night</span>
+                    </div>
+                    {urlsForm.bookingUrlGuestHouse2 && (
+                      <a
+                        href={urlsForm.bookingUrlGuestHouse2}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
+                      >
+                        <span>Test link</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                   <input
                     type="url"
@@ -277,18 +297,28 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                 {/* 3. Guest House 3 */}
                 <div className="bg-[#FAF8F5] border border-[#E5DFC5] p-4 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#2C221E]">
-                      3. The Wina Guest House 3 (`bookingUrlGuestHouse3`)
-                    </label>
-                    <a
-                      href={urlsForm.bookingUrlGuestHouse3}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
-                    >
-                      <span>Test link</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[#2C221E]">
+                          3. The Wina Guest House 3
+                        </label>
+                        <span className="text-[10px] font-semibold text-[#1F5C3E] bg-[#EAF5EF] px-2 py-0.5 rounded">
+                          OTA: Booking.com · Verified / Match
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66]">Harga website: Rp400.000/night (Property ID numerik belum diverifikasi, tidak dikarang)</span>
+                    </div>
+                    {urlsForm.bookingUrlGuestHouse3 && (
+                      <a
+                        href={urlsForm.bookingUrlGuestHouse3}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
+                      >
+                        <span>Test link</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                   <input
                     type="url"
@@ -302,18 +332,28 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                 {/* 4. Villa 01 */}
                 <div className="bg-[#FAF8F5] border border-[#E5DFC5] p-4 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#2C221E]">
-                      4. The Wina Villa 01 (`bookingUrlVilla01`)
-                    </label>
-                    <a
-                      href={urlsForm.bookingUrlVilla01}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
-                    >
-                      <span>Test link</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[#2C221E]">
+                          4. The Wina Villa 01
+                        </label>
+                        <span className="text-[10px] font-semibold text-[#1E40AF] bg-[#EFF6FF] px-2 py-0.5 rounded">
+                          OTA: Trip.com · Hotel ID: 120788345 · Verified / Match
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66]">Harga website: Rp1.635.000/night</span>
+                    </div>
+                    {urlsForm.bookingUrlVilla01 && (
+                      <a
+                        href={urlsForm.bookingUrlVilla01}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
+                      >
+                        <span>Test link</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                   <input
                     type="url"
@@ -327,23 +367,35 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                 {/* 5. Villa 02 */}
                 <div className="bg-[#FAF8F5] border border-[#E5DFC5] p-4 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#2C221E]">
-                      5. The Wina Villa 02 (`bookingUrlVilla02`)
-                    </label>
-                    <a
-                      href={urlsForm.bookingUrlVilla02}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
-                    >
-                      <span>Test link</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-[#2C221E]">
+                          5. The Wina Villa 02
+                        </label>
+                        <span className="text-[10px] font-semibold text-[#854D0E] bg-[#FEF9C3] px-2 py-0.5 rounded">
+                          OTA: Belum Tersedia · Status: Coming Soon
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66]">Harga website: Rp1.635.000/night (Booking.com ❌, Trip.com ❌, Agoda ❌, Traveloka ❌). Tombol menampilkan COMING SOON.</span>
+                    </div>
+                    {urlsForm.bookingUrlVilla02 ? (
+                      <a
+                        href={urlsForm.bookingUrlVilla02}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-[#B38F56] hover:underline flex items-center gap-1"
+                      >
+                        <span>Test link</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    ) : (
+                      <span className="text-[11px] text-[#7B6E66] italic">Coming Soon</span>
+                    )}
                   </div>
                   <input
-                    type="url"
-                    required
+                    type="text"
                     value={urlsForm.bookingUrlVilla02}
+                    placeholder="Belum tersedia / Coming Soon (Kosongkan jika belum ada listing resmi)"
                     onChange={(e) => setUrlsForm({ ...urlsForm, bookingUrlVilla02: e.target.value })}
                     className="w-full bg-[#FAF8F5] border border-[#D8CBB5] rounded-lg px-3.5 py-2 text-xs font-mono text-[#2C221E] focus:ring-2 focus:ring-[#B38F56]"
                   />

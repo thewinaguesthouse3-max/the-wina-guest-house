@@ -13,10 +13,10 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ currentLang, onReadPos
 
   const categories = [
     { key: 'all', labelEn: 'All Guides', labelId: 'Semua Artikel' },
-    { key: 'Canggu Travel Guide', labelEn: 'Canggu Guide', labelId: 'Panduan Canggu' },
-    { key: 'Things to Do in Bali', labelEn: 'Things to Do', labelId: 'Aktivitas Wisata' },
-    { key: 'Guest House and Villa Guide', labelEn: 'Guest House vs Villa', labelId: 'Guest House & Villa' },
-    { key: 'Accommodation Tips', labelEn: 'Travel Tips', labelId: 'Tips Menginap' },
+    { key: 'Bali Travel Guide', labelEn: 'Bali Travel Guide', labelId: 'Panduan Wisata Bali' },
+    { key: 'Canggu Accommodation Guide', labelEn: 'Accommodation Guide', labelId: 'Panduan Akomodasi' },
+    { key: 'The Wina Hospitality', labelEn: 'The Wina Hospitality', labelId: 'The Wina Hospitality' },
+    { key: 'Bali Stay Tips', labelEn: 'Bali Stay Tips', labelId: 'Tips Menginap di Bali' },
   ];
 
   const filteredPosts = blogPosts.filter((post) => {

@@ -26,7 +26,7 @@ import { SemLandingModal } from '@/src/components/SemLandingModal';
 import { LegalModals } from '@/src/components/LegalModals';
 
 import { Property, initialProperties } from '@/src/data/properties';
-import { BlogPost } from '@/src/data/blog';
+import { BlogPost, blogPosts } from '@/src/data/blog';
 import { Language } from '@/src/data/translations';
 import {
   BookingUrlsConfig,
@@ -36,6 +36,7 @@ import {
   getStoredProperties,
   recordTrackingEvent,
 } from '@/src/config/ownerStore';
+import { updatePageSeo, generatePropertySchema, generateBlogSchema } from '@/src/utils/seo';
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState<Language>('en');
@@ -84,9 +85,131 @@ export default function App() {
     }
   };
 
-  const handleOpenWhatsAppInquiry = (prop?: Property) => {
+  // SEO & URL Navigation Handlers
+  const handleSelectProperty = (prop: Property) => {
+    setSelectedProperty(prop);
+    setSelectedPost(null);
+    setSemLandingOpen(false);
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ type: 'property', id: prop.id }, '', prop.canonicalUrl);
+      } catch (e) {
+        // Fallback for sandboxed iframe
+      }
+      updatePageSeo({
+        title: prop.seoTitle,
+        description: prop.seoDescription,
+        canonicalPath: prop.canonicalUrl,
+        schemaJson: generatePropertySchema(prop),
+      });
+    }
+
     recordTrackingEvent({
-      type: 'WHATSAPP_CLICK',
+      type: 'property_view',
+      property: prop.id,
+      propertyId: prop.id,
+      propertyName: prop.name,
+      metadata: `Property Details Page View: ${prop.name}`,
+    });
+  };
+
+  const handleSelectPost = (post: BlogPost) => {
+    setSelectedPost(post);
+    setSelectedProperty(null);
+    setSemLandingOpen(false);
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ type: 'blog', id: post.id }, '', post.canonicalUrl);
+      } catch (e) {
+        // Fallback for sandboxed iframe
+      }
+      updatePageSeo({
+        title: `${post.titleEn} | The Wina Hospitality`,
+        description: post.metaDescEn,
+        canonicalPath: post.canonicalUrl,
+        schemaJson: generateBlogSchema(post),
+      });
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProperty(null);
+    setSelectedPost(null);
+    setLegalModal(null);
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState(null, '', '/');
+      } catch (e) {}
+      updatePageSeo({});
+    }
+  };
+
+  // Synchronize initial URL and listen for browser back/forward buttons
+  useEffect(() => {
+    const handleUrlRoute = () => {
+      if (typeof window === 'undefined') return;
+      const pathname = window.location.pathname;
+
+      // Check property URL
+      if (pathname.startsWith('/properties/')) {
+        const slug = pathname.replace('/properties/', '');
+        const matchedProp = properties.find((p) => p.canonicalSlug === slug || p.canonicalUrl === pathname);
+        if (matchedProp) {
+          setSelectedProperty(matchedProp);
+          setSelectedPost(null);
+          updatePageSeo({
+            title: matchedProp.seoTitle,
+            description: matchedProp.seoDescription,
+            canonicalPath: matchedProp.canonicalUrl,
+            schemaJson: generatePropertySchema(matchedProp),
+          });
+          return;
+        }
+      }
+
+      // Check blog URL
+      if (pathname.startsWith('/blog/')) {
+        const slug = pathname.replace('/blog/', '');
+        const matchedPost = blogPosts.find((p) => p.slug === slug || p.canonicalUrl === pathname);
+        if (matchedPost) {
+          setSelectedPost(matchedPost);
+          setSelectedProperty(null);
+          updatePageSeo({
+            title: `${matchedPost.titleEn} | The Wina Hospitality`,
+            description: matchedPost.metaDescEn,
+            canonicalPath: matchedPost.canonicalUrl,
+            schemaJson: generateBlogSchema(matchedPost),
+          });
+          return;
+        }
+      }
+
+      // Check SEM campaign URL
+      if (pathname === '/sem' || window.location.search.includes('sem=1') || window.location.search.includes('gclid=')) {
+        setSemLandingOpen(true);
+      }
+
+      // Reset to root SEO if on home
+      if (pathname === '/' || pathname === '') {
+        setSelectedProperty(null);
+        setSelectedPost(null);
+        updatePageSeo({});
+      }
+    };
+
+    handleUrlRoute();
+    window.addEventListener('popstate', handleUrlRoute);
+    return () => window.removeEventListener('popstate', handleUrlRoute);
+  }, [properties]);
+
+  const handleOpenWhatsAppInquiry = (prop?: Property) => {
+    const propId = prop?.id || 'general';
+    recordTrackingEvent({
+      type: 'whatsapp_click',
+      property: propId,
       propertyId: prop?.id,
       propertyName: prop?.name || 'General Inquiry',
       metadata: 'Direct WhatsApp Concierge Inquiry',
@@ -103,15 +226,15 @@ export default function App() {
   // Owner dashboard actions
   const handleSaveBookingUrls = (newUrls: BookingUrlsConfig) => {
     setBookingUrls(newUrls);
-    localStorage.setItem('thewina_booking_urls_v1', JSON.stringify(newUrls));
+    localStorage.setItem('thewina_booking_urls_v2', JSON.stringify(newUrls));
     // Update properties in state and local storage
     setProperties((prev) =>
       prev.map((p) => {
-        if (p.id === 'echo-beach') return { ...p, bookingUrl: newUrls.bookingUrlEchoBeach };
-        if (p.id === 'guest-house-2') return { ...p, bookingUrl: newUrls.bookingUrlGuestHouse2 };
-        if (p.id === 'guest-house-3') return { ...p, bookingUrl: newUrls.bookingUrlGuestHouse3 };
-        if (p.id === 'villa-01') return { ...p, bookingUrl: newUrls.bookingUrlVilla01 };
-        if (p.id === 'villa-02') return { ...p, bookingUrl: newUrls.bookingUrlVilla02 };
+        if (p.id === 'echo-beach') return { ...p, bookingUrl: newUrls.bookingUrlEchoBeach, otaName: 'Booking.com' as const, otaStatus: 'verified' as const };
+        if (p.id === 'guest-house-2') return { ...p, bookingUrl: newUrls.bookingUrlGuestHouse2, otaName: 'Booking.com' as const, otaStatus: 'verified' as const, otaPropertyId: '2037301' };
+        if (p.id === 'guest-house-3') return { ...p, bookingUrl: newUrls.bookingUrlGuestHouse3, otaName: 'Booking.com' as const, otaStatus: 'verified' as const };
+        if (p.id === 'villa-01') return { ...p, bookingUrl: newUrls.bookingUrlVilla01, otaName: 'Trip.com' as const, otaStatus: 'verified' as const, otaPropertyId: '120788345' };
+        if (p.id === 'villa-02') return { ...p, bookingUrl: newUrls.bookingUrlVilla02, otaName: (newUrls.bookingUrlVilla02 ? 'Booking.com' : 'Coming Soon') as 'Booking.com' | 'Coming Soon', otaStatus: (newUrls.bookingUrlVilla02 ? 'verified' : 'coming_soon') as 'verified' | 'coming_soon' };
         return p;
       })
     );
@@ -119,18 +242,18 @@ export default function App() {
 
   const handleSaveContact = (newContact: ContactConfig) => {
     setContactConfig(newContact);
-    localStorage.setItem('thewina_contact_v1', JSON.stringify(newContact));
+    localStorage.setItem('thewina_contact_v2', JSON.stringify(newContact));
   };
 
   const handleSaveProperties = (newProps: Property[]) => {
     setProperties(newProps);
-    localStorage.setItem('thewina_properties_v1', JSON.stringify(newProps));
+    localStorage.setItem('thewina_properties_v2', JSON.stringify(newProps));
   };
 
   const handleResetDefaults = () => {
-    localStorage.removeItem('thewina_booking_urls_v1');
-    localStorage.removeItem('thewina_contact_v1');
-    localStorage.removeItem('thewina_properties_v1');
+    localStorage.removeItem('thewina_booking_urls_v2');
+    localStorage.removeItem('thewina_contact_v2');
+    localStorage.removeItem('thewina_properties_v2');
     setBookingUrls(getStoredBookingUrls());
     setContactConfig(getStoredContact());
     setProperties(initialProperties);
@@ -159,7 +282,7 @@ export default function App() {
         <SearchWidget
           properties={properties}
           currentLang={currentLang}
-          onSelectPropertyDetails={(prop) => setSelectedProperty(prop)}
+          onSelectPropertyDetails={handleSelectProperty}
         />
 
         {/* About Section */}
@@ -172,7 +295,7 @@ export default function App() {
         <PropertiesSection
           properties={properties}
           currentLang={currentLang}
-          onSelectProperty={(prop) => setSelectedProperty(prop)}
+          onSelectProperty={handleSelectProperty}
           onOpenWhatsAppInquiry={handleOpenWhatsAppInquiry}
         />
 
@@ -189,14 +312,14 @@ export default function App() {
         <SpecialOffersSection
           currentLang={currentLang}
           properties={properties}
-          onSelectProperty={(prop) => setSelectedProperty(prop)}
+          onSelectProperty={handleSelectProperty}
           onOpenWhatsAppInquiry={handleOpenWhatsAppInquiry}
         />
 
         {/* Blog & Travel Guides */}
         <BlogSection
           currentLang={currentLang}
-          onReadPost={(post) => setSelectedPost(post)}
+          onReadPost={handleSelectPost}
         />
 
         {/* Call to Action Banner */}
@@ -223,7 +346,7 @@ export default function App() {
         properties={properties}
         contactConfig={contactConfig}
         currentLang={currentLang}
-        onSelectProperty={(prop) => setSelectedProperty(prop)}
+        onSelectProperty={handleSelectProperty}
         onNavigate={handleNavigate}
         onOpenTerms={() => setLegalModal('terms')}
         onOpenPrivacy={() => setLegalModal('privacy')}
@@ -242,7 +365,7 @@ export default function App() {
         <PropertyDetailModal
           property={selectedProperty}
           currentLang={currentLang}
-          onClose={() => setSelectedProperty(null)}
+          onClose={handleCloseModal}
           onOpenWhatsAppInquiry={handleOpenWhatsAppInquiry}
         />
       )}
@@ -253,8 +376,12 @@ export default function App() {
           post={selectedPost}
           properties={properties}
           currentLang={currentLang}
-          onClose={() => setSelectedPost(null)}
-          onSelectProperty={(prop) => setSelectedProperty(prop)}
+          onClose={handleCloseModal}
+          onSelectProperty={handleSelectProperty}
+          onExploreProperties={() => {
+            handleCloseModal();
+            handleNavigate('properties');
+          }}
         />
       )}
 

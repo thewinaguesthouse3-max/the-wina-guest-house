@@ -21,7 +21,8 @@ import {
   UtensilsCrossed,
   Car,
   Tv,
-  Refrigerator
+  Refrigerator,
+  Navigation
 } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import { Language, translations } from '@/src/data/translations';
@@ -46,12 +47,17 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const handleBookNow = () => {
+    if (property.otaStatus === 'coming_soon' || !property.bookingUrl) {
+      handleWhatsApp();
+      return;
+    }
+
     recordTrackingEvent({
       type: 'BOOKING_CLICK',
       propertyId: property.id,
       propertyName: property.name,
       targetUrl: property.bookingUrl,
-      metadata: `PropertyDetailModal - ${property.bookingUrlKey}`,
+      metadata: `PropertyDetailModal - ${property.bookingUrlKey} (${property.otaName})`,
     });
     window.open(property.bookingUrl, '_blank', 'noopener,noreferrer');
   };
@@ -90,14 +96,25 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
         {/* Sticky Header with Title & Close Button */}
         <div className="sticky top-0 z-20 bg-[#FAF8F5]/95 backdrop-blur-md px-6 py-4 border-b border-[#E5DFC5] flex items-center justify-between">
           <div>
-            <div className="text-xs uppercase tracking-widest text-[#B38F56] font-semibold flex items-center gap-1.5">
-              <span>{property.category === 'villa' ? 'Private Villa' : 'Boutique Guest House'}</span>
-              <span aria-hidden="true" className="text-[#D8CBB5]">·</span>
-              <span>{property.neighborhood}</span>
+            {/* Breadcrumb Navigation */}
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[11px] text-[#7B6E66] mb-1">
+              <span className="text-[#2C221E] font-medium">Home</span>
+              <ChevronRight className="w-3 h-3 text-[#D8CBB5]" />
+              <span className="text-[#7B6E66]">Properties</span>
+              <ChevronRight className="w-3 h-3 text-[#D8CBB5]" />
+              <span className="text-[#8B6B3E] font-semibold truncate max-w-[200px] sm:max-w-none">
+                {property.name}
+              </span>
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <h1 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
+                {property.name}
+              </h1>
+              <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[#2C221E] text-white rounded">
+                From Rp{property.startingPriceIdr.toLocaleString('id-ID')}/night
+              </span>
             </div>
-            <h2 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
-              {property.name}
-            </h2>
           </div>
 
           <button
@@ -171,7 +188,11 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold text-[#8B6B3E] uppercase tracking-wider mb-1">
                 <Info className="w-4 h-4 text-[#B38F56]" />
-                <span>{t.propertyDetail.bookingChannelNotice}</span>
+                <span>
+                  {property.otaStatus === 'coming_soon'
+                    ? 'Online OTA Listing: Coming Soon'
+                    : `Verified ${property.otaName} Listing${property.otaPropertyId ? ` (ID: ${property.otaPropertyId})` : ''}`}
+                </span>
               </div>
               <p className="text-xs text-[#5A4D45]">
                 {currentLang === 'id' ? property.priceNoteId : property.priceNoteEn}
@@ -188,14 +209,30 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                 <span>{t.propertyDetail.chatWaBtn}</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleBookNow}
-                className="flex-1 sm:flex-initial py-2.5 px-5 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
-              >
-                <span>{t.propertyDetail.bookOnBookingBtn}</span>
-                <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
-              </button>
+              {property.otaStatus === 'coming_soon' || !property.bookingUrl ? (
+                <button
+                  type="button"
+                  onClick={handleBookNow}
+                  className="flex-1 sm:flex-initial py-2.5 px-5 text-xs font-semibold uppercase tracking-wider text-[#7B6E66] bg-[#EFECE6] hover:bg-[#E5DFC5] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+                  title="Online OTA booking coming soon. Inquire directly via WhatsApp."
+                >
+                  <span className="tracking-widest font-bold">COMING SOON</span>
+                  <MessageSquare className="w-3.5 h-3.5 text-[#8B6B3E]" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleBookNow}
+                  className="flex-1 sm:flex-initial py-2.5 px-5 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+                >
+                  <span>
+                    {currentLang === 'id'
+                      ? `Pesan di ${property.otaName}`
+                      : `Book on ${property.otaName}`}
+                  </span>
+                  <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -270,36 +307,95 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Location & Map Section */}
-          <div>
-            <h3 className="font-serif text-xl font-semibold text-[#2C221E] mb-2">
-              {t.propertyDetail.locationTitle}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#7B6E66] mb-4 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#B38F56]" />
-              <span>{property.location}</span>
-            </p>
+          {/* Find Us - Location & Google Maps Section */}
+          <div className="pt-2 border-t border-[#E5DFC5]/80">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#B38F56] mb-1">
+                  <MapPin className="w-3.5 h-3.5 text-[#B38F56]" />
+                  <span>Location</span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#2C221E]">
+                  Find Us
+                </h3>
+              </div>
+              <span className="text-xs text-[#7B6E66] hidden sm:inline-block">
+                Canggu, Bali
+              </span>
+            </div>
 
-            {/* Clean Map Preview / Directions link */}
-            <div className="rounded-xl border border-[#E5DFC5] bg-[#EFECE6] p-6 text-center">
-              <MapPin className="w-8 h-8 text-[#B38F56] mx-auto mb-2" />
-              <h4 className="text-sm font-semibold text-[#2C221E] mb-1">
-                {property.name} on Google Maps
-              </h4>
-              <p className="text-xs text-[#7B6E66] max-w-md mx-auto mb-4">
-                {currentLang === 'id'
-                  ? 'Buka rute Google Maps untuk petunjuk arah langsung ke lokasi properti.'
-                  : 'Open Google Maps for precise GPS coordinates and driving directions.'}
-              </p>
-              <a
-                href={property.googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2C221E] hover:bg-[#3E2F28] text-white text-xs font-semibold rounded-md transition-colors"
-              >
-                <span>{currentLang === 'id' ? 'Buka Google Maps' : 'Open in Google Maps'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+            <div className="bg-[#FAF8F5] rounded-2xl border border-[#E5DFC5] overflow-hidden shadow-xs">
+              {/* Card Header with Property Name, Address & Prominent CTAs */}
+              <div className="p-5 sm:p-6 border-b border-[#E5DFC5] bg-[#EFECE6]/40 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[#2C221E] text-white rounded">
+                      {property.category === 'villa' ? 'Private Villa' : 'Boutique Guest House'}
+                    </span>
+                    <h4 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
+                      {property.name}
+                    </h4>
+                  </div>
+                  <div className="flex items-start gap-2 mt-2 text-xs sm:text-sm text-[#5A4D45]">
+                    <MapPin className="w-4 h-4 text-[#B38F56] shrink-0 mt-0.5" />
+                    <span className="font-medium">{property.location}</span>
+                  </div>
+                  <p className="text-xs text-[#7B6E66] mt-1 ml-6">
+                    {property.distanceToBeach} · {property.neighborhood}
+                  </p>
+                </div>
+
+                {/* Prominent Action Buttons: VIEW ON GOOGLE MAPS & GET DIRECTIONS */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                  <a
+                    href={property.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2C221E] hover:bg-[#B38F56] text-white text-xs font-bold tracking-wider uppercase rounded-md transition-colors shadow-xs cursor-pointer text-center"
+                  >
+                    <span>VIEW ON GOOGLE MAPS</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-[#E5DFC5]" />
+                  </a>
+                  <a
+                    href={property.googleDirectionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#FAF3E0] hover:bg-[#EFECE6] text-[#2C221E] border border-[#D8CBB5] text-xs font-bold tracking-wider uppercase rounded-md transition-colors shadow-xs cursor-pointer text-center"
+                  >
+                    <Navigation className="w-3.5 h-3.5 text-[#8B6B3E]" />
+                    <span>GET DIRECTIONS</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Google Maps Preview / Embed */}
+              <div className="relative w-full h-72 sm:h-80 bg-[#EFECE6]">
+                <iframe
+                  title={`Google Maps preview of ${property.name}`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(property.googleMapsEmbedQuery || property.location)}&t=&z=16&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+
+              {/* Footer info & location verification note */}
+              <div className="px-5 py-3 bg-[#FAF8F5] border-t border-[#E5DFC5] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#7B6E66]">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5 text-[#B38F56]" />
+                  <span>
+                    Accurate GPS coordinates verified for {property.shortName}
+                  </span>
+                </div>
+                {property.id.startsWith('villa') && (
+                  <span className="text-[11px] text-[#8B6B3E] font-medium">
+                    {property.id === 'villa-01'
+                      ? 'Note: The Wina Villa 01 and Villa 02 share the same verified private villa location in Subak Canggu.'
+                      : 'Note: The Wina Villa 02 and Villa 01 share the same verified private villa location in Subak Canggu.'}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -344,14 +440,30 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
               <MessageSquare className="w-4 h-4" />
               <span>WhatsApp Concierge</span>
             </button>
-            <button
-              type="button"
-              onClick={handleBookNow}
-              className="flex-1 sm:flex-initial py-2.5 px-6 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>{t.propertyDetail.bookOnBookingBtn}</span>
-              <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
-            </button>
+            {property.otaStatus === 'coming_soon' || !property.bookingUrl ? (
+              <button
+                type="button"
+                onClick={handleBookNow}
+                className="flex-1 sm:flex-initial py-2.5 px-6 text-xs font-semibold uppercase tracking-wider text-[#7B6E66] bg-[#EFECE6] hover:bg-[#E5DFC5] rounded-md transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                title="Online OTA booking coming soon. Inquire directly via WhatsApp."
+              >
+                <span className="tracking-widest font-bold">COMING SOON</span>
+                <MessageSquare className="w-3.5 h-3.5 text-[#8B6B3E]" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleBookNow}
+                className="flex-1 sm:flex-initial py-2.5 px-6 text-xs font-semibold uppercase tracking-wider text-white bg-[#2C221E] hover:bg-[#B38F56] rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>
+                  {currentLang === 'id'
+                    ? `Pesan di ${property.otaName}`
+                    : `Book on ${property.otaName}`}
+                </span>
+                <ExternalLink className="w-4 h-4 text-[#E5DFC5]" />
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -17,9 +17,21 @@ export interface ContactConfig {
   address: string;
 }
 
+export type TrackingEventType =
+  | 'property_view'
+  | 'booking_click'
+  | 'ota_click'
+  | 'whatsapp_click'
+  | 'contact_submit'
+  | 'PROPERTY_VIEW'
+  | 'BOOKING_CLICK'
+  | 'WHATSAPP_CLICK'
+  | 'FORM_SUBMIT';
+
 export interface TrackingEvent {
   id: string;
-  type: 'BOOKING_CLICK' | 'WHATSAPP_CLICK' | 'FORM_SUBMIT' | 'PROPERTY_VIEW';
+  type: TrackingEventType;
+  property: string; // Identifier: "echo-beach" | "guest-house-2" | "guest-house-3" | "villa-01" | "villa-02" | "general"
   propertyId?: string;
   propertyName?: string;
   targetUrl?: string;
@@ -28,11 +40,11 @@ export interface TrackingEvent {
 }
 
 const DEFAULT_BOOKING_URLS: BookingUrlsConfig = {
-  bookingUrlEchoBeach: 'https://www.booking.com/hotel/id/the-wina-echo-beach-guest-house.html',
-  bookingUrlGuestHouse2: 'https://www.booking.com/hotel/id/the-wina-guest-house-2.html',
-  bookingUrlGuestHouse3: 'https://www.booking.com/hotel/id/the-wina-guest-house-3.html',
-  bookingUrlVilla01: 'https://www.booking.com/hotel/id/the-wina-villa-01.html',
-  bookingUrlVilla02: 'https://www.booking.com/hotel/id/the-wina-villa-02.html',
+  bookingUrlEchoBeach: 'https://www.booking.com/hotel/id/the-wina-echo-beach-guest-house.id.html',
+  bookingUrlGuestHouse2: 'https://www.booking.com/hotel/id/the-wina-guest-house-2.id.html',
+  bookingUrlGuestHouse3: 'https://www.booking.com/hotel/id/the-wina-guest-house-3.id.html',
+  bookingUrlVilla01: 'https://id.trip.com/hotels/bali-hotel-detail-120788345/the-wina-villa-01/',
+  bookingUrlVilla02: '', // Coming Soon
 };
 
 const DEFAULT_CONTACT: ContactConfig = {
@@ -43,10 +55,10 @@ const DEFAULT_CONTACT: ContactConfig = {
   address: 'Canggu, Badung Regency, Bali 80351, Indonesia',
 };
 
-const STORAGE_KEY_PROPERTIES = 'thewina_properties_v1';
-const STORAGE_KEY_URLS = 'thewina_booking_urls_v1';
-const STORAGE_KEY_CONTACT = 'thewina_contact_v1';
-const STORAGE_KEY_EVENTS = 'thewina_tracking_events_v1';
+const STORAGE_KEY_PROPERTIES = 'thewina_properties_v2';
+const STORAGE_KEY_URLS = 'thewina_booking_urls_v2';
+const STORAGE_KEY_CONTACT = 'thewina_contact_v2';
+const STORAGE_KEY_EVENTS = 'thewina_tracking_events_v2';
 
 export function getStoredBookingUrls(): BookingUrlsConfig {
   try {
@@ -74,7 +86,15 @@ export function getStoredProperties(): Property[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        // Synchronize with initialProperties to guarantee official locations & maps are always accurate
+        return initialProperties.map((initProp) => {
+          const matched = parsed.find((p: Property) => p.id === initProp.id);
+          if (!matched) return initProp;
+          return {
+            ...initProp,
+            startingPriceIdr: matched.startingPriceIdr ?? initProp.startingPriceIdr,
+          };
+        });
       }
     }
   } catch (e) {
@@ -83,13 +103,29 @@ export function getStoredProperties(): Property[] {
   return initialProperties;
 }
 
-export function recordTrackingEvent(event: Omit<TrackingEvent, 'id' | 'timestamp'>) {
+export function recordTrackingEvent(event: Omit<TrackingEvent, 'id' | 'timestamp' | 'property'> & { property?: string }) {
   try {
+    const propId = event.property || event.propertyId || 'general';
     const newEvent: TrackingEvent = {
       ...event,
+      property: propId,
       id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
       timestamp: new Date().toISOString(),
     };
+
+    // Google Ads / Google Tag Manager integration via dataLayer
+    if (typeof window !== 'undefined') {
+      const win = window as any;
+      win.dataLayer = win.dataLayer || [];
+      win.dataLayer.push({
+        event: newEvent.type,
+        property: newEvent.property,
+        propertyName: newEvent.propertyName,
+        targetUrl: newEvent.targetUrl,
+        metadata: newEvent.metadata,
+      });
+    }
+
     const raw = localStorage.getItem(STORAGE_KEY_EVENTS);
     const events: TrackingEvent[] = raw ? JSON.parse(raw) : [];
     events.unshift(newEvent);
