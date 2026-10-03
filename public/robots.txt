@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thewina-hospitality.com/sitemap.xml

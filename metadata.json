@@ -1,0 +1,6 @@
+{
+  "name": "The Wina Hospitality | Bali Accommodations",
+  "description": "Premium accommodations, guest houses, and private villas in Canggu, Bali by The Wina Hospitality. Your stay, your comfort, your Bali experience.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
