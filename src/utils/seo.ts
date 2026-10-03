@@ -133,6 +133,7 @@ export function generatePropertySchema(property: Property) {
       },
       checkinTime: property.checkIn,
       checkoutTime: property.checkOut,
+      keywords: property.targetKeywords.join(', '),
       amenityFeature: property.amenities.map((a) => ({
         '@type': 'LocationFeatureSpecification',
         name: a.nameEn,

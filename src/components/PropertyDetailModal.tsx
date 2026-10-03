@@ -22,7 +22,9 @@ import {
   Car,
   Tv,
   Refrigerator,
-  Navigation
+  Navigation,
+  Snowflake,
+  Droplets
 } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import { Language, translations } from '@/src/data/translations';
@@ -72,21 +74,36 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
     onOpenWhatsAppInquiry(property);
   };
 
-  // Helper icon map
+  // Helper icon map with consistent premium styling
   const renderAmenityIcon = (iconName: string) => {
     switch (iconName) {
-      case 'Wifi': return <Wifi className="w-4 h-4 text-[#B38F56]" />;
-      case 'Waves': return <Waves className="w-4 h-4 text-[#B38F56]" />;
-      case 'Bath': return <Bath className="w-4 h-4 text-[#B38F56]" />;
-      case 'AirVent': return <AirVent className="w-4 h-4 text-[#B38F56]" />;
-      case 'Sparkles': return <Sparkles className="w-4 h-4 text-[#B38F56]" />;
-      case 'Coffee': return <Coffee className="w-4 h-4 text-[#B38F56]" />;
-      case 'Bike': return <Bike className="w-4 h-4 text-[#B38F56]" />;
-      case 'UtensilsCrossed': return <UtensilsCrossed className="w-4 h-4 text-[#B38F56]" />;
-      case 'Car': return <Car className="w-4 h-4 text-[#B38F56]" />;
-      case 'Tv': return <Tv className="w-4 h-4 text-[#B38F56]" />;
-      case 'Refrigerator': return <Refrigerator className="w-4 h-4 text-[#B38F56]" />;
-      default: return <ShieldCheck className="w-4 h-4 text-[#B38F56]" />;
+      case 'Snowflake':
+      case 'AirVent':
+        return <Snowflake className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Droplets':
+      case 'Bath':
+        return <Droplets className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Wifi':
+        return <Wifi className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Car':
+        return <Car className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'UtensilsCrossed':
+      case 'Kitchen':
+        return <UtensilsCrossed className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Sparkles':
+        return <Sparkles className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Waves':
+        return <Waves className="w-5 h-5 text-[#1F5C3E]" />;
+      case 'Coffee':
+        return <Coffee className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Bike':
+        return <Bike className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Tv':
+        return <Tv className="w-5 h-5 text-[#8B6B3E]" />;
+      case 'Refrigerator':
+        return <Refrigerator className="w-5 h-5 text-[#8B6B3E]" />;
+      default:
+        return <ShieldCheck className="w-5 h-5 text-[#8B6B3E]" />;
     }
   };
 
@@ -261,24 +278,86 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             </ul>
           </div>
 
-          {/* Amenities Grid */}
+          {/* Facility & Amenities Section - Clean Premium Cards */}
           <div>
-            <h3 className="font-serif text-xl font-semibold text-[#2C221E] mb-3">
-              {t.propertyDetail.amenitiesTitle}
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {property.amenities.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-3 rounded-lg bg-[#FAF8F5] border border-[#E5DFC5] flex items-center gap-2.5 text-xs text-[#2C221E] font-medium"
-                >
-                  <div className="p-1.5 rounded-md bg-[#EFECE6]">
-                    {renderAmenityIcon(item.icon)}
-                  </div>
-                  <span className="truncate">{currentLang === 'id' ? item.nameId : item.nameEn}</span>
-                </div>
-              ))}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#B38F56] block">
+                  AMENITIES
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E]">
+                  {currentLang === 'id' ? 'Fasilitas Terverifikasi' : 'Verified Property Amenities'}
+                </h3>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-[#7B6E66]">
+                <ShieldCheck className="w-4 h-4 text-[#1F5C3E]" />
+                <span className="font-medium">
+                  {currentLang === 'id'
+                    ? `${property.amenities.length} Fasilitas Terverifikasi`
+                    : `${property.amenities.length} Verified Amenities`}
+                </span>
+              </div>
             </div>
+
+            {/* Clean Premium Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
+              {property.amenities.map((item, idx) => {
+                const isPool = item.icon === 'Waves' || item.nameEn.toLowerCase().includes('pool');
+                return (
+                  <div
+                    key={idx}
+                    className={`p-4 rounded-xl border transition-all duration-200 flex items-center gap-3.5 ${
+                      isPool
+                        ? 'bg-[#FAF3E0]/70 border-[#B38F56]/50 shadow-xs'
+                        : 'bg-white border-[#E5DFC5] hover:border-[#D8CBB5] hover:bg-[#FAF8F5]'
+                    }`}
+                  >
+                    <div
+                      className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 ${
+                        isPool
+                          ? 'bg-[#2C221E] text-[#E5DFC5]'
+                          : 'bg-[#FAF3E0] text-[#8B6B3E] border border-[#E5DFC5]/70'
+                      }`}
+                    >
+                      {renderAmenityIcon(item.icon)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="text-sm font-semibold text-[#2C221E] truncate">
+                          {currentLang === 'id' ? item.nameId : item.nameEn}
+                        </h4>
+                        {isPool && (
+                          <span className="shrink-0 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-[#2C221E] text-[#FAF3E0] rounded">
+                            {property.category === 'villa' ? 'Private Pool' : 'Main Feature'}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[11px] text-[#7B6E66] block mt-0.5 truncate">
+                        {isPool
+                          ? currentLang === 'id'
+                            ? 'Fasilitas kolam renang'
+                            : 'Swimming pool facility'
+                          : currentLang === 'id'
+                            ? 'Fasilitas terverifikasi'
+                            : 'Verified facility'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Verification Note for Villa 01 and 02 */}
+            {property.category === 'villa' && property.amenities.length === 1 && (
+              <div className="mt-3.5 p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E5DFC5] text-xs text-[#6B5E55] flex items-start gap-2.5">
+                <Info className="w-4 h-4 text-[#B38F56] shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  {currentLang === 'id'
+                    ? 'Fasilitas yang diverifikasi oleh pemilik saat ini adalah Kolam Renang Privat. Fasilitas lainnya hanya akan ditampilkan apabila sudah diverifikasi resmi oleh pemilik.'
+                    : 'The currently verified facility confirmed by the owner is the Private Swimming Pool. Additional amenities will be published once officially confirmed by the property owner.'}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Room Configurations */}

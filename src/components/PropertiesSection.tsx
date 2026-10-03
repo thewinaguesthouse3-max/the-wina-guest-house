@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Users, Wifi, Waves, ArrowRight, ExternalLink, MessageSquare, Sparkles } from 'lucide-react';
+import { MapPin, Users, Wifi, Waves, ArrowRight, ExternalLink, MessageSquare, Sparkles, Snowflake } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import { Language, translations } from '@/src/data/translations';
 import { recordTrackingEvent } from '@/src/config/ownerStore';
@@ -158,21 +158,33 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                     {currentLang === 'id' ? property.taglineId : property.taglineEn}
                   </p>
 
-                  {/* Clean unboxed metadata with separators */}
-                  <div className="flex items-center gap-2 text-xs text-[#5A4D45] py-2 border-y border-[#E5DFC5]/70 mb-4">
+                  {/* Clean unboxed metadata with separators - strictly verified facilities */}
+                  <div className="flex items-center gap-2 text-xs text-[#5A4D45] py-2 border-y border-[#E5DFC5]/70 mb-4 flex-wrap">
                     <span className="flex items-center gap-1">
                       <Users className="w-3.5 h-3.5 text-[#B38F56]" />
                       <span>{property.capacity}</span>
                     </span>
                     <span aria-hidden="true" className="text-[#D8CBB5]">·</span>
-                    <span className="flex items-center gap-1">
-                      <Waves className="w-3.5 h-3.5 text-[#B38F56]" />
-                      <span>{property.category === 'villa' ? 'Private Pool' : 'Pool Access'}</span>
-                    </span>
-                    <span aria-hidden="true" className="text-[#D8CBB5]">·</span>
+                    {property.amenities.some((a) => a.icon === 'Waves' || a.nameEn.toLowerCase().includes('pool')) ? (
+                      <>
+                        <span className="flex items-center gap-1">
+                          <Waves className="w-3.5 h-3.5 text-[#1F5C3E]" />
+                          <span>{property.category === 'villa' ? 'Private Pool' : 'Swimming Pool'}</span>
+                        </span>
+                        <span aria-hidden="true" className="text-[#D8CBB5]">·</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="flex items-center gap-1">
+                          <Snowflake className="w-3.5 h-3.5 text-[#B38F56]" />
+                          <span>Air Conditioning</span>
+                        </span>
+                        <span aria-hidden="true" className="text-[#D8CBB5]">·</span>
+                      </>
+                    )}
                     <span className="flex items-center gap-1">
                       <Wifi className="w-3.5 h-3.5 text-[#B38F56]" />
-                      <span>Fiber WiFi</span>
+                      <span>Strong Wi-Fi</span>
                     </span>
                   </div>
 

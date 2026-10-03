@@ -225,17 +225,29 @@ export const SemLandingModal: React.FC<SemLandingModalProps> = ({
               <div className="grid grid-cols-2 gap-2 text-xs text-[#5A4D45] pt-2">
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
-                  <span>High-speed fiber WiFi</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
                   <span>
-                    {activeProperty.category === 'villa' ? 'Exclusive Private Pool' : 'Swimming Pool Access'}
+                    {activeProperty.amenities.some((a) => a.icon === 'Waves' || a.nameEn.toLowerCase().includes('pool'))
+                      ? activeProperty.category === 'villa'
+                        ? 'Private Swimming Pool'
+                        : 'Swimming Pool Access'
+                      : 'Hot Water Shower'}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
-                  <span>Air conditioning</span>
+                  <span>
+                    {activeProperty.category === 'villa'
+                      ? 'Exclusive Private Villa'
+                      : 'Air Conditioning'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />
+                  <span>
+                    {activeProperty.category === 'villa'
+                      ? 'Prime Subak Canggu'
+                      : 'Strong Wi-Fi'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5 text-[#1F5C3E]" />

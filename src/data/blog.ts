@@ -151,7 +151,7 @@ export const blogPosts: BlogPost[] = [
         subheading: 'Choosing Where to Sleep: Avoiding the Noise',
         paragraphs: [
           'A key tip for first-timers is that Canggu’s main streets can stay lively late into the evening. To guarantee deep, restful sleep, choose a guest house situated down a peaceful side gang (alley) rather than directly facing a main commercial road.',
-          'Both The Wina Guest House 2 (located in the serene Subak Ambengan neighborhood near Jalan Nelayan) and The Wina Guest House 3 provide quiet, shaded grounds with outdoor swimming pools just minutes from the action.'
+          'The Wina Guest House 2 (located in the serene Subak Ambengan neighborhood near Jalan Nelayan) provides quiet, restful grounds, while The Wina Guest House 3 features a peaceful outdoor swimming pool just minutes from the action.'
         ],
       }
     ],
@@ -260,7 +260,7 @@ export const blogPosts: BlogPost[] = [
       {
         subheading: 'Echo Beach Area: For Ocean Lovers & Surfers',
         paragraphs: [
-          'If your dream Bali morning involves rolling out of bed with a towel over your shoulder and checking the waves within minutes, the Echo Beach pocket is unbeatable. The Wina Echo Beach Guest House puts you 350 meters from the sand with comfortable air-conditioned bedrooms, swimming pool, and fiber WiFi.'
+          'If your dream Bali morning involves rolling out of bed with a towel over your shoulder and checking the waves within minutes, the Echo Beach pocket is unbeatable. The Wina Echo Beach Guest House puts you 350 meters from the sand with comfortable air-conditioned bedrooms, hot water showers, and fiber WiFi.'
         ],
       },
       {
@@ -346,7 +346,7 @@ export const blogPosts: BlogPost[] = [
       {
         subheading: 'Kenyamanan Bersama The Wina Hospitality',
         paragraphs: [
-          'The Wina Hospitality menyediakan opsi guest house nyaman dengan kolam renang bersama seperti Echo Beach Guest House, Guest House 2, dan Guest House 3, serta villa privat eksklusif di Villa 01 dan Villa 02.'
+          'The Wina Hospitality menyediakan opsi guest house nyaman seperti Echo Beach Guest House dan Guest House 2, guest house berkolam renang di Guest House 3, serta villa privat eksklusif di Villa 01 dan Villa 02.'
         ],
       }
     ]
@@ -372,7 +372,7 @@ export const blogPosts: BlogPost[] = [
         heading: 'Quality Stays on a Sensible Budget',
         paragraphs: [
           'While Canggu has developed a reputation for luxury beach clubs and upscale dining, travelers can still find outstanding value in boutique accommodations. The key is finding properties that focus on essentials: clean air-conditioned rooms, comfortable hotel-grade mattresses, private hot water showers, and reliable high-speed WiFi.',
-          'The Wina Guest House 2 (from Rp250,000/night) and The Wina Echo Beach Guest House (from Rp330,000/night) demonstrate that affordable rates can coexist with high standards of cleanliness, swimming pool access, and attentive on-site management.'
+          'The Wina Guest House 2 (from Rp250,000/night) and The Wina Echo Beach Guest House (from Rp330,000/night) demonstrate that affordable rates can coexist with high standards of cleanliness, reliable air conditioning, and attentive on-site management.'
         ],
       },
       {
@@ -386,7 +386,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: 'Akomodasi Berkualitas dengan Tarif Terjangkau',
         paragraphs: [
-          'Mendapatkan penginapan terjangkau di Canggu tanpa mengorbankan kebersihan dan kenyamanan sangat dimungkinkan. Properti seperti The Wina Guest House 2 (mulai Rp250.000/malam) dan The Wina Echo Beach Guest House (mulai Rp330.000/malam) menawarkan kamar ber-AC dengan kolam renang dan WiFi cepat di lokasi strategis.'
+          'Mendapatkan penginapan terjangkau di Canggu tanpa mengorbankan kebersihan dan kenyamanan sangat dimungkinkan. Properti seperti The Wina Guest House 2 (mulai Rp250.000/malam) dan The Wina Echo Beach Guest House (mulai Rp330.000/malam) menawarkan kamar ber-AC yang bersih dengan air hangat dan WiFi cepat di lokasi strategis.'
         ],
       }
     ]
@@ -462,7 +462,7 @@ export const blogPosts: BlogPost[] = [
         heading: 'A Sanctuary for Surfers and Ocean Enthusiasts',
         paragraphs: [
           'Located on Jl. Pantai Batu Bolong No. 21 in Canggu, The Wina Echo Beach Guest House represents the perfect balance of surf proximity and peaceful relaxation. Just a 4-minute walk (350 meters) brings you to the sands of Echo Beach and beachfront venues like La Brisa.',
-          'With starting rates from Rp330,000 per night, guests enjoy crisp air-conditioned bedrooms, private en-suite hot water bathrooms, a refreshing central swimming pool, and fiber optic WiFi.'
+          'With starting rates from Rp330,000 per night, guests enjoy crisp air-conditioned bedrooms, private en-suite hot water bathrooms, kitchen facilities, and fiber optic WiFi.'
         ],
       },
       {
@@ -477,7 +477,7 @@ export const blogPosts: BlogPost[] = [
         heading: 'Akomodasi Nyaman Dekat Echo Beach',
         paragraphs: [
           'Terletak di Jl. Pantai Batu Bolong No. 21, The Wina Echo Beach Guest House menawarkan akses jalan kaki hanya 4 menit ke Pantai Echo Beach.',
-          'Tarif mulai dari Rp330.000/malam dengan fasilitas kamar mandi dalam air hangat, kolam renang tropis, dan pemesanan resmi melalui Booking.com.'
+          'Tarif mulai dari Rp330.000/malam dengan fasilitas kamar mandi dalam air hangat, pendingin ruangan (AC), fasilitas dapur, dan pemesanan resmi melalui Booking.com.'
         ],
       }
     ]
@@ -554,7 +554,7 @@ export const blogPosts: BlogPost[] = [
       {
         subheading: '1. Accommodation Costs',
         paragraphs: [
-          'Boutique guest houses: High quality air-conditioned rooms with swimming pool access, like The Wina Guest House 2 (from Rp250,000/night) or The Wina Echo Beach Guest House (from Rp330,000/night), provide exceptional comfort and value.',
+          'Boutique guest houses: High quality air-conditioned rooms, like The Wina Guest House 2 (from Rp250,000/night) or The Wina Echo Beach Guest House (from Rp330,000/night), and guest houses with swimming pool access like The Wina Guest House 3 (from Rp400,000/night), provide exceptional comfort and value.',
           'Private pool villas: For travelers seeking complete luxury and personal pools, private villas like The Wina Villa 01 start from Rp1,635,000/night.'
         ],
       },
