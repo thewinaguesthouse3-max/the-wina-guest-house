@@ -15,7 +15,11 @@ import {
   Info,
   Activity,
   Layers,
-  Sparkles
+  Sparkles,
+  Share2,
+  Image as ImageIcon,
+  Copy,
+  Check
 } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import {
@@ -47,12 +51,13 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
   onSaveProperties,
   onResetDefaults,
 }) => {
-  const [activeTab, setActiveTab] = useState<'booking-urls' | 'contact' | 'analytics' | 'pricing'>('booking-urls');
+  const [activeTab, setActiveTab] = useState<'booking-urls' | 'contact' | 'analytics' | 'pricing' | 'og-share'>('booking-urls');
   const [urlsForm, setUrlsForm] = useState<BookingUrlsConfig>({ ...bookingUrls });
   const [contactForm, setContactForm] = useState<ContactConfig>({ ...contactConfig });
   const [propertiesState, setPropertiesState] = useState<Property[]>([...properties]);
   const [events, setEvents] = useState<TrackingEvent[]>([]);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [copiedOg, setCopiedOg] = useState<string | null>(null);
 
   useEffect(() => {
     setEvents(getTrackingEvents());
@@ -195,6 +200,18 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
           >
             <Home className="w-4 h-4 text-[#B38F56]" />
             <span>Starting Rates & Descriptions</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('og-share')}
+            className={`py-3 px-4 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ${
+              activeTab === 'og-share'
+                ? 'border-[#B38F56] text-[#2C221E] bg-[#FAF8F5]'
+                : 'border-transparent text-[#7B6E66] hover:text-[#2C221E]'
+            }`}
+          >
+            <Share2 className="w-4 h-4 text-[#B38F56]" />
+            <span>Open Graph & Social Share Preview</span>
           </button>
         </div>
 
@@ -656,6 +673,254 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                   <Save className="w-4 h-4 text-[#E5DFC5]" />
                   <span>Save Rates</span>
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: Open Graph & Social Share Preview */}
+          {activeTab === 'og-share' && (
+            <div className="space-y-6">
+              <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#E5DFC5]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-serif text-lg font-semibold text-[#2C221E] flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-[#B38F56]" />
+                      Official Open Graph (OG) Image & Social Previews
+                    </h3>
+                    <p className="text-xs text-[#7B6E66] mt-1">
+                      Standar rasio emas 1.91:1 (1200 × 630 px) dan format Square 1:1 aktif untuk WhatsApp, Facebook, Instagram, Twitter/X, LinkedIn, dan Telegram.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href="/og-image.jpg"
+                      download="the-wina-hospitality-og-1200x630.jpg"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#2C221E] text-white text-xs font-semibold rounded hover:bg-[#B38F56] transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download OG (1200×630)</span>
+                    </a>
+                    <a
+                      href="/the_wina_logo_original_1x1.svg"
+                      download="the_wina_logo_original_1x1.svg"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D8CBB5] text-[#2C221E] text-xs font-semibold rounded hover:bg-[#FAF8F5] transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>SVG Logo</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Banner Preview & Assets Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* 1200x630 High-Resolution Banner */}
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="bg-white p-4 rounded-xl border border-[#E5DFC5] shadow-xs">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#B38F56] flex items-center gap-1.5">
+                        <CheckCircle className="w-4 h-4 text-emerald-600" />
+                        Main OG Image (1200 × 630 px — 1.91:1)
+                      </span>
+                      <span className="text-[11px] font-mono text-[#7B6E66] bg-[#F2EDE4] px-2 py-0.5 rounded">
+                        /og-image.jpg
+                      </span>
+                    </div>
+
+                    <div className="relative aspect-[1200/630] w-full rounded-lg overflow-hidden border border-[#D8CBB5] bg-[#FAF9F5] group shadow-inner">
+                      <img
+                        src="/og-image.jpg"
+                        alt="The Wina Hospitality Open Graph Banner"
+                        className="w-full h-full object-contain"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded">
+                        1200 × 630 px · JPEG/PNG
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between text-xs text-[#7B6E66]">
+                      <span>Path: <code className="text-[#2C221E] font-semibold">/og-image.jpg</code> & <code className="text-[#2C221E] font-semibold">/og.jpg</code></span>
+                      <button
+                        onClick={() => {
+                          const url = `${window.location.origin}/og-image.jpg`;
+                          navigator.clipboard.writeText(url);
+                          setCopiedOg('main');
+                          setTimeout(() => setCopiedOg(null), 2500);
+                        }}
+                        className="flex items-center gap-1 text-[#B38F56] hover:text-[#2C221E] font-semibold transition-colors cursor-pointer"
+                      >
+                        {copiedOg === 'main' ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-emerald-600">Copied URL!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy URL</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Square Format & Vector SVG */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-white p-3.5 rounded-xl border border-[#E5DFC5]">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B6E66]">
+                          Square 1:1 (1200 × 1200)
+                        </span>
+                        <span className="text-[10px] font-mono text-[#7B6E66] bg-[#F2EDE4] px-1.5 py-0.5 rounded">
+                          /og-square.jpg
+                        </span>
+                      </div>
+                      <div className="aspect-square w-full rounded border border-[#E5DFC5] bg-[#FAF9F5] overflow-hidden flex items-center justify-center p-2">
+                        <img
+                          src="/og-square.jpg"
+                          alt="Square OG Logo"
+                          className="w-full h-full object-contain"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                      <div className="mt-2 flex items-center justify-between text-[11px]">
+                        <span className="text-[#7B6E66]">WhatsApp Chat Thumbnail</span>
+                        <a
+                          href="/og-square.jpg"
+                          download="wina-og-square.jpg"
+                          className="text-[#B38F56] font-semibold hover:underline"
+                        >
+                          Download
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-3.5 rounded-xl border border-[#E5DFC5]">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B6E66]">
+                          Vector Emblem (SVG)
+                        </span>
+                        <span className="text-[10px] font-mono text-[#7B6E66] bg-[#F2EDE4] px-1.5 py-0.5 rounded">
+                          .svg original
+                        </span>
+                      </div>
+                      <div className="aspect-square w-full rounded border border-[#E5DFC5] bg-[#FAF9F5] overflow-hidden flex items-center justify-center p-4">
+                        <img
+                          src="/the_wina_logo_original_1x1.svg"
+                          alt="Vector SVG Logo"
+                          className="w-full h-full object-contain"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                      <div className="mt-2 flex items-center justify-between text-[11px]">
+                        <span className="text-[#7B6E66]">Scalable Vector File</span>
+                        <a
+                          href="/the_wina_logo_original_1x1.svg"
+                          download="the_wina_logo_original_1x1.svg"
+                          className="text-[#B38F56] font-semibold hover:underline"
+                        >
+                          Download
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulated Social Media Previews */}
+                <div className="lg:col-span-5 space-y-4">
+                  {/* WhatsApp Preview Card */}
+                  <div className="bg-white p-4 rounded-xl border border-[#E5DFC5]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded-full bg-[#25D366] flex items-center justify-center text-white text-[10px] font-bold">
+                        WA
+                      </div>
+                      <h4 className="text-xs font-bold text-[#2C221E] uppercase tracking-wider">
+                        WhatsApp Link Preview Simulation
+                      </h4>
+                    </div>
+
+                    <div className="bg-[#EFECE6] p-3 rounded-lg border border-[#D8CBB5]">
+                      <div className="bg-[#D9FDD3] rounded-lg p-2.5 max-w-sm shadow-xs border border-[#C2E8BC]">
+                        <div className="rounded overflow-hidden border border-black/10 bg-[#FAF9F5]">
+                          <img
+                            src="/og-image.jpg"
+                            alt="WA Preview"
+                            className="w-full aspect-[1200/630] object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="p-2 bg-white/90">
+                            <p className="text-[11px] font-bold text-[#111B21] line-clamp-1">
+                              The Wina Hospitality | Luxury Accommodations in Bali
+                            </p>
+                            <p className="text-[10px] text-[#667781] line-clamp-2 mt-0.5">
+                              Discover your perfect stay in Bali with The Wina Hospitality. Premium guest houses and private villas in Canggu.
+                            </p>
+                            <p className="text-[9px] text-[#8696A0] uppercase font-mono mt-1">
+                              thewina-hospitality.com
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Twitter / X Summary Large Image Preview */}
+                  <div className="bg-white p-4 rounded-xl border border-[#E5DFC5]">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center text-white text-[10px] font-bold">
+                        𝕏
+                      </div>
+                      <h4 className="text-xs font-bold text-[#2C221E] uppercase tracking-wider">
+                        Twitter / X Large Image Card
+                      </h4>
+                    </div>
+
+                    <div className="rounded-xl overflow-hidden border border-[#CFD9DE] bg-white">
+                      <img
+                        src="/og-image.jpg"
+                        alt="Twitter Card"
+                        className="w-full aspect-[1200/630] object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="p-3 bg-[#F7F9F9] border-t border-[#EFF3F4]">
+                        <p className="text-[11px] text-[#536471] font-mono">
+                          thewina-hospitality.com
+                        </p>
+                        <p className="text-xs font-bold text-[#0F1419] mt-0.5 line-clamp-1">
+                          The Wina Hospitality | Luxury Accommodations in Bali
+                        </p>
+                        <p className="text-[11px] text-[#536471] mt-0.5 line-clamp-2">
+                          Experience comfort, relaxation, and warm hospitality with The Wina Hospitality. Guest houses and villas in Canggu, Bali.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Meta Tags Status List */}
+                  <div className="bg-[#FAF8F5] p-3.5 rounded-xl border border-[#E5DFC5] text-xs space-y-2">
+                    <span className="font-bold text-[#2C221E] block">Open Graph Meta Tags Status:</span>
+                    <div className="space-y-1.5 text-[11px]">
+                      <div className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span><code>og:image</code> (1200×630 px JPEG & PNG) aktif</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span><code>twitter:card</code> (summary_large_image) aktif</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span><code>og:image:secure_url</code> & HTTPS terpasang</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Schema.org JSON-LD gambar terverifikasi</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}

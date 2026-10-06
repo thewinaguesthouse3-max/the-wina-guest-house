@@ -4,8 +4,16 @@ import { BlogPost } from '@/src/data/blog';
 const DEFAULT_TITLE = 'The Wina Hospitality | Luxury Accommodations in Bali';
 const DEFAULT_DESC =
   'Discover your perfect stay in Bali with The Wina Hospitality. Premium guest houses and private villas in Canggu and Echo Beach.';
-const SITE_URL = 'https://thewina-hospitality.com';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const PRODUCTION_SITE_URL = 'https://thewina-hospitality.com';
+export const SITE_URL = PRODUCTION_SITE_URL;
+export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/og-image.jpg`;
+
+export function getSiteBaseUrl(): string {
+  if (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')) {
+    return window.location.origin;
+  }
+  return PRODUCTION_SITE_URL;
+}
 
 export function updatePageSeo(params: {
   title?: string;
@@ -16,10 +24,20 @@ export function updatePageSeo(params: {
 }) {
   if (typeof document === 'undefined') return;
 
+  const currentBaseUrl = getSiteBaseUrl();
   const title = params.title || DEFAULT_TITLE;
   const description = params.description || DEFAULT_DESC;
-  const canonicalUrl = params.canonicalPath ? `${SITE_URL}${params.canonicalPath}` : `${SITE_URL}/`;
-  const imageUrl = params.image || DEFAULT_OG_IMAGE;
+  const canonicalUrl = params.canonicalPath
+    ? (params.canonicalPath.startsWith('http') ? params.canonicalPath : `${currentBaseUrl}${params.canonicalPath}`)
+    : `${currentBaseUrl}/`;
+
+  let rawImage = params.image || '/og-image.jpg';
+  let imageUrl = rawImage;
+  if (rawImage.startsWith('/')) {
+    imageUrl = `${currentBaseUrl}${rawImage}`;
+  } else if (!rawImage.startsWith('http')) {
+    imageUrl = `${currentBaseUrl}/${rawImage}`;
+  }
 
   // Update Document Title
   document.title = title;
@@ -62,6 +80,11 @@ export function updatePageSeo(params: {
   let ogImageSecure = document.querySelector('meta[property="og:image:secure_url"]');
   if (ogImageSecure) {
     ogImageSecure.setAttribute('content', imageUrl);
+  } else {
+    ogImageSecure = document.createElement('meta');
+    ogImageSecure.setAttribute('property', 'og:image:secure_url');
+    ogImageSecure.setAttribute('content', imageUrl);
+    document.head.appendChild(ogImageSecure);
   }
 
   // Update Twitter Title & Description
@@ -106,11 +129,11 @@ export function updatePageSeo(params: {
       '@graph': [
         {
           '@type': 'Organization',
-          '@id': `${SITE_URL}/#organization`,
+          '@id': `${currentBaseUrl}/#organization`,
           name: 'The Wina Hospitality',
-          url: `${SITE_URL}/`,
-          logo: `${SITE_URL}/the-wina-logo.svg`,
-          image: DEFAULT_OG_IMAGE,
+          url: `${currentBaseUrl}/`,
+          logo: `${currentBaseUrl}/the-wina-logo.svg`,
+          image: imageUrl,
           description: 'Hospitality, Guest House, Villa, and Accommodation Management in Canggu, Bali.',
           email: 'thewinaguesthouse3@gmail.com',
           sameAs: ['https://www.instagram.com/the_wina_guesthouse'],
