@@ -48,8 +48,8 @@ const DEFAULT_BOOKING_URLS: BookingUrlsConfig = {
 };
 
 const DEFAULT_CONTACT: ContactConfig = {
-  whatsappNumber: '+62 812-3987-6543',
-  whatsappRaw: '6281239876543',
+  whatsappNumber: '+62 823-1779-1322',
+  whatsappRaw: '6282317791322',
   email: 'thewinaguesthouse3@gmail.com',
   instagram: '@the_wina_guesthouse',
   address: 'Canggu, Badung Regency, Bali 80351, Indonesia',
@@ -73,7 +73,20 @@ export function getStoredBookingUrls(): BookingUrlsConfig {
 export function getStoredContact(): ContactConfig {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_CONTACT);
-    if (raw) return { ...DEFAULT_CONTACT, ...JSON.parse(raw) };
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Migrate if user has stale old contact number stored
+      if (parsed.whatsappRaw === '6281239876543' || parsed.whatsappNumber === '+62 812-3987-6543') {
+        const updated = {
+          ...parsed,
+          whatsappNumber: DEFAULT_CONTACT.whatsappNumber,
+          whatsappRaw: DEFAULT_CONTACT.whatsappRaw,
+        };
+        localStorage.setItem(STORAGE_KEY_CONTACT, JSON.stringify(updated));
+        return updated;
+      }
+      return { ...DEFAULT_CONTACT, ...parsed };
+    }
   } catch (e) {
     console.error('Error reading contact from localStorage', e);
   }

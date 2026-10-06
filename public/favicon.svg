@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <style>
+      .wina-disc {
+        fill: #FFFFFF;
+      }
+      .wina-stroke {
+        fill: none;
+        stroke: #1A1615;
+        stroke-width: 15;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      @media (prefers-color-scheme: dark) {
+        .wina-disc {
+          fill: #1A1615;
+        }
+        .wina-stroke {
+          stroke: #FAF8F5;
+        }
+      }
+    </style>
+  </defs>
+
+  <!-- Clean rounded background disc for high visibility in dark/light browser chrome -->
+  <circle cx="256" cy="256" r="248" class="wina-disc" />
+
+  <g transform="translate(0, 16)">
+    <!-- CIRCLE BADGE CONTOUR -->
+    <!-- Left upper arc -->
+    <path class="wina-stroke" d="M 136 195 C 122 225, 116 255, 116 280" />
+    <!-- Bottom semicircle frame -->
+    <path class="wina-stroke" d="M 116 280 C 116 357, 179 420, 256 420 C 333 420, 396 357, 396 280" />
+    <!-- Right upper arc -->
+    <path class="wina-stroke" d="M 396 280 C 396 258, 390 236, 380 216" />
+
+    <!-- 4 HORIZONTAL WAVES / SEA LINES -->
+    <line class="wina-stroke" x1="116" y1="280" x2="396" y2="280" />
+    <line class="wina-stroke" x1="126" y1="312" x2="386" y2="312" />
+    <line class="wina-stroke" x1="148" y1="344" x2="364" y2="344" />
+    <line class="wina-stroke" x1="184" y1="376" x2="328" y2="376" />
+
+    <!-- THE SUN -->
+    <path class="wina-stroke" d="M 284 280 A 36 36 0 0 1 356 280" />
+
+    <!-- LEFT PALM TRUNK -->
+    <path class="wina-stroke" d="M 230 280 C 230 200, 204 145, 186 112" />
+    <!-- Left Accent Dash -->
+    <path class="wina-stroke" d="M 175 162 C 168 174, 160 186, 154 196" />
+
+    <!-- RIGHT PALM TRUNK -->
+    <path class="wina-stroke" d="M 250 280 C 255 235, 292 185, 334 148" />
+
+    <!-- LEFT PALM FRONDS -->
+    <!-- Frond 1: Top Upright -->
+    <path class="wina-stroke" d="M 186 112 Q 186 70 188 48" />
+    <path class="wina-stroke" d="M 186 85 Q 172 75 160 72" />
+    <path class="wina-stroke" d="M 187 70 Q 175 60 166 54" />
+    <path class="wina-stroke" d="M 187 85 Q 200 75 212 72" />
+    <path class="wina-stroke" d="M 188 70 Q 200 60 208 54" />
+
+    <!-- Frond 2: Top Left -->
+    <path class="wina-stroke" d="M 186 112 Q 155 85 125 76" />
+    <path class="wina-stroke" d="M 165 96 Q 152 82 140 78" />
+    <path class="wina-stroke" d="M 148 88 Q 138 76 128 70" />
+    <path class="wina-stroke" d="M 172 102 Q 176 86 182 76" />
+    <path class="wina-stroke" d="M 155 93 Q 160 80 166 70" />
+
+    <!-- Frond 3: Mid Left -->
+    <path class="wina-stroke" d="M 186 112 Q 148 106 112 118" />
+    <path class="wina-stroke" d="M 160 110 Q 148 98 135 94" />
+    <path class="wina-stroke" d="M 140 112 Q 130 102 120 98" />
+    <path class="wina-stroke" d="M 160 112 Q 152 124 142 132" />
+    <path class="wina-stroke" d="M 140 114 Q 132 126 124 134" />
+
+    <!-- Frond 4: Bottom Left -->
+    <path class="wina-stroke" d="M 186 112 Q 156 126 130 152" />
+    <path class="wina-stroke" d="M 165 124 Q 148 126 135 130" />
+    <path class="wina-stroke" d="M 150 134 Q 135 138 124 144" />
+    <path class="wina-stroke" d="M 168 126 Q 166 142 160 156" />
+
+    <!-- Frond 5: Top Right -->
+    <path class="wina-stroke" d="M 186 112 Q 215 88 248 80" />
+    <path class="wina-stroke" d="M 205 98 Q 218 84 232 78" />
+    <path class="wina-stroke" d="M 220 91 Q 234 80 245 74" />
+    <path class="wina-stroke" d="M 202 103 Q 198 88 194 76" />
+
+    <!-- Frond 6: Mid Right -->
+    <path class="wina-stroke" d="M 186 112 Q 220 112 254 126" />
+    <path class="wina-stroke" d="M 208 112 Q 220 102 234 98" />
+    <path class="wina-stroke" d="M 228 116 Q 240 108 250 104" />
+    <path class="wina-stroke" d="M 208 114 Q 216 126 226 136" />
+    <path class="wina-stroke" d="M 228 120 Q 236 132 244 140" />
+
+    <!-- RIGHT PALM FRONDS -->
+    <!-- Frond 1: Top Upright -->
+    <path class="wina-stroke" d="M 334 148 Q 336 110 338 90" />
+    <path class="wina-stroke" d="M 335 125 Q 322 114 310 110" />
+    <path class="wina-stroke" d="M 336 110 Q 324 100 314 94" />
+    <path class="wina-stroke" d="M 336 125 Q 348 114 360 110" />
+    <path class="wina-stroke" d="M 337 110 Q 348 100 358 94" />
+
+    <!-- Frond 2: Top Left -->
+    <path class="wina-stroke" d="M 334 148 Q 302 126 274 120" />
+    <path class="wina-stroke" d="M 314 135 Q 302 122 290 118" />
+    <path class="wina-stroke" d="M 298 128 Q 286 116 276 112" />
+    <path class="wina-stroke" d="M 318 140 Q 320 124 324 114" />
+
+    <!-- Frond 3: Mid Left -->
+    <path class="wina-stroke" d="M 334 148 Q 298 146 264 160" />
+    <path class="wina-stroke" d="M 310 147 Q 298 136 286 132" />
+    <path class="wina-stroke" d="M 292 149 Q 282 140 272 136" />
+    <path class="wina-stroke" d="M 310 149 Q 304 160 296 170" />
+
+    <!-- Frond 4: Top Right -->
+    <path class="wina-stroke" d="M 334 148 Q 365 124 400 116" />
+    <path class="wina-stroke" d="M 354 134 Q 368 120 382 114" />
+    <path class="wina-stroke" d="M 370 126 Q 384 114 396 108" />
+    <path class="wina-stroke" d="M 352 140 Q 348 124 344 112" />
+
+    <!-- Frond 5: Mid Right -->
+    <path class="wina-stroke" d="M 334 148 Q 370 152 406 170" />
+    <path class="wina-stroke" d="M 358 150 Q 372 140 386 136" />
+    <path class="wina-stroke" d="M 378 156 Q 392 146 404 142" />
+    <path class="wina-stroke" d="M 358 152 Q 366 164 376 174" />
+
+    <!-- Frond 6: Bottom Right -->
+    <path class="wina-stroke" d="M 334 148 Q 358 174 374 206" />
+    <path class="wina-stroke" d="M 348 165 Q 364 164 378 166" />
+    <path class="wina-stroke" d="M 356 180 Q 372 180 384 184" />
+  </g>
+</svg>

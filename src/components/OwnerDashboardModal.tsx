@@ -550,7 +550,7 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                     required
                     value={contactForm.whatsappRaw}
                     onChange={(e) => setContactForm({ ...contactForm, whatsappRaw: e.target.value })}
-                    placeholder="e.g. 6281239876543"
+                    placeholder="e.g. 6282317791322"
                     className="w-full bg-[#FAF8F5] border border-[#D8CBB5] rounded-lg px-3.5 py-2 text-xs text-[#2C221E] font-mono focus:ring-2 focus:ring-[#B38F56]"
                   />
                   <span className="text-[11px] text-[#7B6E66] block mt-1">

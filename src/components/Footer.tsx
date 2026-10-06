@@ -35,9 +35,16 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#FAF8F5] block">
-              The Wina Hospitality
-            </span>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/the-wina-logo.svg"
+                alt="The Wina Hospitality Logo"
+                className="w-9 h-9 object-contain brightness-0 invert opacity-90"
+              />
+              <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#FAF8F5]">
+                The Wina Hospitality
+              </span>
+            </div>
             <p className="text-xs uppercase tracking-widest text-[#C5A880] font-medium">
               {t.footer.tagline}
             </p>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, Users, Home, Search, ExternalLink, Info, AlertCircle } from 'lucide-react';
 import { Property } from '@/src/data/properties';
 import { Language, translations } from '@/src/data/translations';
-import { recordTrackingEvent } from '@/src/config/ownerStore';
+import { recordTrackingEvent, getStoredContact } from '@/src/config/ownerStore';
 
 interface SearchWidgetProps {
   properties: Property[];
@@ -217,7 +217,8 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({
                     const text = encodeURIComponent(
                       `Hello The Wina Hospitality! I would like to inquire about booking ${prop?.name || 'Villa 02'} in Canggu Bali.`
                     );
-                    window.open(`https://wa.me/6281239876543?text=${text}`, '_blank', 'noopener,noreferrer');
+                    const contactConfig = getStoredContact();
+                    window.open(`https://wa.me/${contactConfig.whatsappRaw}?text=${text}`, '_blank', 'noopener,noreferrer');
                   }}
                   className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#1F5C3E] hover:bg-[#16452E] rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >

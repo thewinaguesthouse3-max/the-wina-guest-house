@@ -29,11 +29,16 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#E5DFC5]/60 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Zone 1: Single text element wordmark */}
+          {/* Zone 1: Brand Logo & Wordmark */}
           <button
             onClick={() => handleLinkClick('hero')}
-            className="text-left group cursor-pointer"
+            className="text-left group cursor-pointer flex items-center gap-2.5"
           >
+            <img
+              src="/the-wina-logo.svg"
+              alt="The Wina Hospitality Logo"
+              className="w-8 h-8 sm:w-9 sm:h-9 object-contain"
+            />
             <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#2C221E] group-hover:text-[#B38F56] transition-colors">
               The Wina Hospitality
             </span>

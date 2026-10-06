@@ -98,7 +98,7 @@ export function updatePageSeo(params: {
           name: 'The Wina Hospitality',
           url: `${SITE_URL}/`,
           priceRange: 'Rp250.000 - Rp1.635.000',
-          telephone: '+62 812-3987-6543',
+          telephone: '+62 823-1779-1322',
           address: {
             '@type': 'PostalAddress',
             streetAddress: 'Canggu, Kuta Utara, Badung',
