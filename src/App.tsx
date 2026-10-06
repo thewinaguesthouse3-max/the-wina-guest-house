@@ -102,7 +102,6 @@ export default function App() {
         description: prop.seoDescription,
         canonicalPath: prop.canonicalUrl,
         schemaJson: generatePropertySchema(prop),
-        image: prop.heroImage,
       });
     }
 
@@ -131,7 +130,6 @@ export default function App() {
         description: post.metaDescEn,
         canonicalPath: post.canonicalUrl,
         schemaJson: generateBlogSchema(post),
-        image: post.coverImage,
       });
     }
   };
@@ -167,7 +165,6 @@ export default function App() {
             description: matchedProp.seoDescription,
             canonicalPath: matchedProp.canonicalUrl,
             schemaJson: generatePropertySchema(matchedProp),
-            image: matchedProp.heroImage,
           });
           return;
         }
@@ -185,7 +182,6 @@ export default function App() {
             description: matchedPost.metaDescEn,
             canonicalPath: matchedPost.canonicalUrl,
             schemaJson: generateBlogSchema(matchedPost),
-            image: matchedPost.coverImage,
           });
           return;
         }

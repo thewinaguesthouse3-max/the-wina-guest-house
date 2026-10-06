@@ -5,21 +5,18 @@ const DEFAULT_TITLE = 'The Wina Hospitality | Luxury Accommodations in Bali';
 const DEFAULT_DESC =
   'Discover your perfect stay in Bali with The Wina Hospitality. Premium guest houses and private villas in Canggu and Echo Beach.';
 const SITE_URL = 'https://thewina-hospitality.com';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`;
 
 export function updatePageSeo(params: {
   title?: string;
   description?: string;
   canonicalPath?: string;
   schemaJson?: object;
-  image?: string;
 }) {
   if (typeof document === 'undefined') return;
 
   const title = params.title || DEFAULT_TITLE;
   const description = params.description || DEFAULT_DESC;
   const canonicalUrl = params.canonicalPath ? `${SITE_URL}${params.canonicalPath}` : `${SITE_URL}/`;
-  const imageUrl = params.image || DEFAULT_OG_IMAGE;
 
   // Update Document Title
   document.title = title;
@@ -50,34 +47,11 @@ export function updatePageSeo(params: {
   }
   ogUrl.setAttribute('content', canonicalUrl);
 
-  // Update OpenGraph Image
-  let ogImage = document.querySelector('meta[property="og:image"]');
-  if (!ogImage) {
-    ogImage = document.createElement('meta');
-    ogImage.setAttribute('property', 'og:image');
-    document.head.appendChild(ogImage);
-  }
-  ogImage.setAttribute('content', imageUrl);
-
-  let ogImageSecure = document.querySelector('meta[property="og:image:secure_url"]');
-  if (ogImageSecure) {
-    ogImageSecure.setAttribute('content', imageUrl);
-  }
-
   // Update Twitter Title & Description
   let twitterTitle = document.querySelector('meta[name="twitter:title"]');
   if (twitterTitle) twitterTitle.setAttribute('content', title);
   let twitterDesc = document.querySelector('meta[name="twitter:description"]');
   if (twitterDesc) twitterDesc.setAttribute('content', description);
-
-  // Update Twitter Image
-  let twitterImg = document.querySelector('meta[name="twitter:image"]');
-  if (!twitterImg) {
-    twitterImg = document.createElement('meta');
-    twitterImg.setAttribute('name', 'twitter:image');
-    document.head.appendChild(twitterImg);
-  }
-  twitterImg.setAttribute('content', imageUrl);
 
   // Update Canonical Link
   let canonicalLink = document.querySelector('link[rel="canonical"]');
@@ -109,8 +83,6 @@ export function updatePageSeo(params: {
           '@id': `${SITE_URL}/#organization`,
           name: 'The Wina Hospitality',
           url: `${SITE_URL}/`,
-          logo: `${SITE_URL}/the-wina-logo.svg`,
-          image: DEFAULT_OG_IMAGE,
           description: 'Hospitality, Guest House, Villa, and Accommodation Management in Canggu, Bali.',
           email: 'thewinaguesthouse3@gmail.com',
           sameAs: ['https://www.instagram.com/the_wina_guesthouse'],
@@ -125,7 +97,6 @@ export function updatePageSeo(params: {
           '@type': 'LocalBusiness',
           name: 'The Wina Hospitality',
           url: `${SITE_URL}/`,
-          image: DEFAULT_OG_IMAGE,
           priceRange: 'Rp250.000 - Rp1.635.000',
           telephone: '+62 823-1779-1322',
           address: {
