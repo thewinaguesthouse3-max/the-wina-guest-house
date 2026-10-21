@@ -1,5 +1,5 @@
 import heroImg from '@/src/assets/images/hero_bali_resort_1791004276796.jpg';
-import echoBeachImg from '@/src/assets/images/wina_echo_beach_room_1791004290768.jpg';
+import roomImg from '@/src/assets/images/wina_echo_beach_room_1791004290768.jpg';
 import villaPoolImg from '@/src/assets/images/wina_villa_pool_1791004304004.jpg';
 import ambienceImg from '@/src/assets/images/bali_canggu_ambience_1791004314788.jpg';
 
@@ -183,7 +183,7 @@ export const blogPosts: BlogPost[] = [
     categoryId: 'Panduan Wisata Bali',
     readTime: '5 min read',
     publishDate: 'October 2026',
-    coverImage: echoBeachImg,
+    coverImage: ambienceImg,
     recommendedPropertyId: 'echo-beach',
     targetKeywords: ['Best Beaches Near Canggu', 'Echo Beach Canggu', 'Batu Bolong beach', 'Nelayan beach Bali', 'Canggu surf beaches'],
     canonicalUrl: '/blog/best-beaches-near-canggu',
@@ -363,7 +363,7 @@ export const blogPosts: BlogPost[] = [
     categoryId: 'Panduan Akomodasi Canggu',
     readTime: '5 min read',
     publishDate: 'October 2026',
-    coverImage: echoBeachImg,
+    coverImage: heroImg,
     recommendedPropertyId: 'guest-house-2',
     targetKeywords: ['Affordable Places to Stay in Canggu', 'cheap accommodation Canggu', 'budget guest house Canggu', 'affordable stay Bali'],
     canonicalUrl: '/blog/affordable-places-to-stay-in-canggu',
@@ -452,17 +452,18 @@ export const blogPosts: BlogPost[] = [
     categoryId: 'The Wina Hospitality',
     readTime: '5 min read',
     publishDate: 'October 2026',
-    coverImage: echoBeachImg,
+    coverImage: roomImg,
     recommendedPropertyId: 'echo-beach',
     isPropertySpecific: true,
     targetKeywords: ['The Wina Echo Beach Guest House', 'guest house near Echo Beach', 'The Wina Echo Beach Guest House Guide', 'stay near Echo Beach'],
     canonicalUrl: '/blog/the-wina-echo-beach-guest-house-guide',
     contentEn: [
       {
-        heading: 'A Sanctuary for Surfers and Ocean Enthusiasts',
+        heading: 'An Authentic Balinese Haven for Surfers and Ocean Enthusiasts',
         paragraphs: [
           'Located on Jl. Pantai Batu Bolong No. 21 in Canggu, The Wina Echo Beach Guest House represents the perfect balance of surf proximity and peaceful relaxation. Just a 4-minute walk (350 meters) brings you to the sands of Echo Beach and beachfront venues like La Brisa.',
-          'With starting rates from Rp330,000 per night, guests enjoy crisp air-conditioned bedrooms, private en-suite hot water bathrooms, kitchen facilities, and fiber optic WiFi.'
+          'As captured in our verified gallery photos, our property features traditional Balinese carved wooden doors, shaded private verandas with garden seating, and cool tiled interiors. Accommodations range from air-conditioned Deluxe Double Rooms to a generous Quadruple Room with 4 single beds—making it a top pick for surf crews and group travelers.',
+          'With starting rates from Rp330,000 per night, every room includes a private en-suite bathroom with walk-in hot shower, individual air conditioning, fiber-optic WiFi, and daily housekeeping.'
         ],
       },
       {
@@ -474,10 +475,11 @@ export const blogPosts: BlogPost[] = [
     ],
     contentId: [
       {
-        heading: 'Akomodasi Nyaman Dekat Echo Beach',
+        heading: 'Akomodasi Khas Bali Nyaman Dekat Echo Beach',
         paragraphs: [
-          'Terletak di Jl. Pantai Batu Bolong No. 21, The Wina Echo Beach Guest House menawarkan akses jalan kaki hanya 4 menit ke Pantai Echo Beach.',
-          'Tarif mulai dari Rp330.000/malam dengan fasilitas kamar mandi dalam air hangat, pendingin ruangan (AC), fasilitas dapur, dan pemesanan resmi melalui Booking.com.'
+          'Terletak di Jl. Pantai Batu Bolong No. 21, The Wina Echo Beach Guest House menawarkan akses jalan kaki hanya 4 menit (350 meter) ke Pantai Echo Beach dan beach club La Brisa.',
+          'Sesuai dengan foto asli properti kami, akomodasi ini menampilkan pintu kayu berukir khas Bali, teras berkanopi dengan meja kursi santai menghadap taman tropis, serta kamar berlantai keramik yang selalu sejuk. Pilihan kamar meliputi Kamar Deluxe Double dan Kamar Quadruple ber-AC dengan 4 kasur single terpisah yang sangat ideal bagi rombongan peselancar maupun keluarga.',
+          'Tarif mulai dari Rp330.000/malam sudah termasuk kamar mandi dalam dengan shower air hangat, pendingin udara (AC), Wi-Fi kencang, dan pemesanan resmi melalui Booking.com.'
         ],
       }
     ]
@@ -636,7 +638,7 @@ export const blogPosts: BlogPost[] = [
     categoryId: 'Tips Menginap di Bali',
     readTime: '6 min read',
     publishDate: 'October 2026',
-    coverImage: echoBeachImg,
+    coverImage: ambienceImg,
     recommendedPropertyId: 'guest-house-3',
     targetKeywords: ['Bali Accommodation Tips for First-Time Visitors', 'how to book accommodation Bali', 'what to look for in a Bali guest house', 'Canggu stay advice'],
     canonicalUrl: '/blog/bali-accommodation-tips-first-timers',

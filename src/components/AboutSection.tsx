@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, MapPin, Compass, ShieldCheck } from 'lucide-react';
-import ambienceImage from '@/src/assets/images/bali_canggu_ambience_1791004314788.jpg';
+import ambienceImage from '@/src/assets/images/wina_canggu_ambience_pure.jpg';
 import { Language, translations } from '@/src/data/translations';
 
 interface AboutSectionProps {

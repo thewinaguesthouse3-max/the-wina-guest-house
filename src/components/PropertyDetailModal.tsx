@@ -24,11 +24,14 @@ import {
   Refrigerator,
   Navigation,
   Snowflake,
-  Droplets
+  Droplets,
+  Camera,
+  Grid
 } from 'lucide-react';
-import { Property } from '@/src/data/properties';
+import { Property, PropertyGalleryPhoto } from '@/src/data/properties';
 import { Language, translations } from '@/src/data/translations';
 import { recordTrackingEvent } from '@/src/config/ownerStore';
+import { PhotoLightbox } from '@/src/components/PhotoLightbox';
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -47,6 +50,18 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
 
   const t = translations[currentLang];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [genericLightboxOpen, setGenericLightboxOpen] = useState(false);
+
+  const genericPhotos: PropertyGalleryPhoto[] = (property.photos && property.photos.length > 0)
+    ? property.photos
+    : property.gallery.map((img, i) => ({
+        src: img,
+        titleEn: `${property.name} - Showcase ${i + 1}`,
+        titleId: `${property.name} - Tampilan ${i + 1}`,
+        captionEn: property.taglineEn,
+        captionId: property.taglineId,
+        category: 'overview' as const,
+      }));
 
   const handleBookNow = () => {
     if (property.otaStatus === 'coming_soon' || !property.bookingUrl) {
@@ -145,17 +160,35 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
 
         {/* Scrollable Content Body */}
         <div className="overflow-y-auto p-6 sm:p-8 space-y-8">
-          {/* Photo Gallery & Thumbnail Carousel */}
+          {/* Photo Gallery */}
           <div>
-            <div className="relative aspect-16/9 rounded-xl overflow-hidden bg-black/5 border border-[#E5DFC5] shadow-sm mb-3">
+            <div
+              onClick={() => setGenericLightboxOpen(true)}
+              className="relative aspect-16/9 rounded-xl overflow-hidden bg-black/5 border border-[#E5DFC5] shadow-sm mb-3 group cursor-pointer"
+            >
               <img
                 src={property.gallery[activeImageIndex] || property.heroImage}
                 alt={`${property.name} showcase`}
-                className="w-full h-full object-cover object-center transition-all duration-300"
+                className="w-full h-full object-cover object-center transition-all duration-300 group-hover:scale-102"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                {activeImageIndex + 1} / {property.gallery.length}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-50 group-hover:opacity-70 transition-opacity" />
+
+              <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                <div className="bg-black/60 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
+                  {activeImageIndex + 1} / {property.gallery.length}
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGenericLightboxOpen(true);
+                  }}
+                  className="bg-white/95 text-[#2C221E] text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1 cursor-pointer"
+                >
+                  <Grid className="w-3.5 h-3.5 text-[#B38F56]" />
+                  <span>{currentLang === 'id' ? 'Lihat Semua Foto' : 'View All Photos'}</span>
+                </button>
               </div>
             </div>
 
@@ -258,7 +291,7 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
             <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#2C221E] mb-3">
               {currentLang === 'id' ? 'Tentang Properti Ini' : 'About This Property'}
             </h3>
-            <p className="text-sm text-[#5A4D45] leading-relaxed">
+            <p className="text-sm text-[#5A4D45] leading-relaxed whitespace-pre-line">
               {currentLang === 'id' ? property.descriptionId : property.descriptionEn}
             </p>
           </div>
@@ -546,6 +579,20 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Lightbox */}
+      <PhotoLightbox
+        isOpen={genericLightboxOpen}
+        currentIndex={activeImageIndex}
+        photos={genericPhotos}
+        propertyName={property.name}
+        bookingUrl={property.bookingUrl}
+        otaName={property.otaName}
+        currentLang={currentLang}
+        onClose={() => setGenericLightboxOpen(false)}
+        onNavigate={(idx) => setActiveImageIndex(idx)}
+        onOpenWhatsAppInquiry={handleWhatsApp}
+      />
     </div>
   );
 };

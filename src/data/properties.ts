@@ -1,7 +1,60 @@
-import heroImg from '@/src/assets/images/hero_bali_resort_1791004276796.jpg';
-import echoBeachImg from '@/src/assets/images/wina_echo_beach_room_1791004290768.jpg';
-import villaPoolImg from '@/src/assets/images/wina_villa_pool_1791004304004.jpg';
-import ambienceImg from '@/src/assets/images/bali_canggu_ambience_1791004314788.jpg';
+/**
+ * ============================================================================
+ * STRICT ASSET ISOLATION & LOCK DIRECTIVE:
+ * ============================================================================
+ * PERATURAN MUTLAK DARI PEMILIK (USER):
+ * 1. [LOCKED / TERKUNCI PERMANEN] THE WINA ECHO BEACH GUEST HOUSE:
+ *    - Seluruh foto (Slot 1, 2, 3, dan 4) serta data The Wina Echo Beach
+ *      Guest House DIKUNCI (LOCKED).
+ *    - DILARANG KERAS mengubah, mengganti, menghapus, atau memindahkan foto
+ *      The Wina Echo Beach Guest House KECUALI ada perintah eksplisit langsung
+ *      dari pengguna yang menyebut nama 'The Wina Echo Beach'.
+ * 
+ * 2. ATURAN ISOLASI FOTO LAINNYA:
+ *    - Setiap properti memiliki slot mandiri dan terisolasi.
+ *    - Mengedit properti lain (Wina Guest House 2, Wina Guest House 3,
+ *      Villa 01, Villa 02) TIDAK BOLEH menyentuh The Wina Echo Beach sama sekali.
+ * ============================================================================
+ */
+
+// --- [LOCKED - DO NOT MODIFY] The Wina Echo Beach Guest House (Slots 1-4) ---
+import echoBeachPhoto1 from '@/src/assets/images/properties/echo-beach/photo-1.jpg';
+import echoBeachPhoto2 from '@/src/assets/images/properties/echo-beach/photo-2.avif';
+import echoBeachPhoto3 from '@/src/assets/images/properties/echo-beach/photo-3.avif';
+import echoBeachPhoto4 from '@/src/assets/images/properties/echo-beach/photo-4.jpg';
+
+// --- The Wina Guest House 2 (Independent Slots 1-4) ---
+import gh2Photo1 from '@/src/assets/images/properties/guest-house-2/photo-1.png';
+import gh2Photo2 from '@/src/assets/images/properties/guest-house-2/photo-2.jpg';
+import gh2Photo3 from '@/src/assets/images/properties/guest-house-2/photo-3.jpg';
+import gh2Photo4 from '@/src/assets/images/properties/guest-house-2/photo-4.png';
+
+// --- The Wina Guest House 3 (Independent Slots 1-4) ---
+import gh3Photo1 from '@/src/assets/images/properties/guest-house-3/photo-1.jpg';
+import gh3Photo2 from '@/src/assets/images/properties/guest-house-3/photo-2.png';
+import gh3Photo3 from '@/src/assets/images/properties/guest-house-3/photo-3.jpg';
+import gh3Photo4 from '@/src/assets/images/properties/guest-house-3/photo-4.png';
+
+// --- The Wina Villa 01 (Independent Slots 1-4) ---
+import villa01Photo1 from '@/src/assets/images/properties/villa-01/photo-1.png';
+import villa01Photo2 from '@/src/assets/images/properties/villa-01/photo-2.jpg';
+import villa01Photo3 from '@/src/assets/images/properties/villa-01/photo-3.jpg';
+import villa01Photo4 from '@/src/assets/images/properties/villa-01/photo-4.jpg';
+
+// --- The Wina Villa 02 (Independent Slots 1-4) ---
+import villa02Photo1 from '@/src/assets/images/properties/villa-02/photo-1.webp';
+import villa02Photo2 from '@/src/assets/images/properties/villa-02/photo-2.webp';
+import villa02Photo3 from '@/src/assets/images/properties/villa-02/photo-3.jpg';
+import villa02Photo4 from '@/src/assets/images/properties/villa-02/photo-4.jpg';
+
+export interface PropertyGalleryPhoto {
+  src: string;
+  titleEn: string;
+  titleId: string;
+  captionEn: string;
+  captionId: string;
+  category: 'bedroom' | 'terrace' | 'entrance' | 'bathroom' | 'family-room' | 'overview';
+}
 
 export interface Property {
   id: string;
@@ -17,6 +70,7 @@ export interface Property {
   distanceToBeach: string;
   heroImage: string;
   gallery: string[];
+  photos?: PropertyGalleryPhoto[];
   startingPriceIdr: number;
   priceNoteEn: string;
   priceNoteId: string;
@@ -59,18 +113,19 @@ export const initialProperties: Property[] = [
     name: 'The Wina Echo Beach Guest House',
     shortName: 'Echo Beach Guest House',
     category: 'guesthouse',
-    taglineEn: 'Boutique coastal comfort just steps from Canggu’s premier surf and sunset break.',
-    taglineId: 'Kenyamanan pesisir butik hanya beberapa langkah dari pantai selancar dan matahari terbenam Canggu.',
-    descriptionEn: 'The Wina Echo Beach Guest House blends authentic Balinese warmth with contemporary minimalist aesthetics. Located in the heart of Canggu within easy walking distance to famous Echo Beach, our sanctuary offers serene bedrooms with premium bedding, quiet workstations, and high-speed fiber WiFi for modern travelers and digital nomads.',
-    descriptionId: 'The Wina Echo Beach Guest House memadukan kehangatan khas Bali dengan estetika minimalis modern. Berlokasi strategis di pusat Canggu dekat dengan Pantai Echo Beach yang ikonik, akomodasi kami menyediakan kamar tidur tenang dengan kasur berkualitas tinggi, area kerja nyaman, dan internet cepat untuk wisatawan maupun digital nomad.',
+    taglineEn: 'Authentic Balinese guest house with carved wooden doors, private verandas, and AC rooms just 350m from Echo Beach.',
+    taglineId: 'Guest house khas Bali dengan pintu kayu berukir, teras privat bersantai, dan kamar ber-AC hanya 350m dari Pantai Echo Beach.',
+    descriptionEn: 'The Wina Echo Beach Guest House is a peaceful tropical haven tucked into a quiet alley on Jl. Pantai Batu Bolong, just 350 meters (a 4-minute walk) from Echo Beach and beachfront venues like La Brisa.\n\nFeaturing authentic Balinese architectural touches, including handcrafted carved wooden doors, private covered verandas with outdoor seating overlooking stone pathways and tropical greenery, and spotless tiled interiors. Guests can choose between comfortable air-conditioned Deluxe Double Rooms with crisp white linens and wardrobe storage, bright Superior Rooms with ample natural daylight, and a spacious Quadruple Room equipped with 4 individual single beds—ideal for surf crews, friends, or families.\n\nEvery room features an en-suite private bathroom with a walk-in hot shower, fast fiber-optic Wi-Fi, shared kitchen access, and daily room cleaning. Tucked away from traffic noise, it provides an authentic, serene island stay just steps from Canggu’s best waves (quiet boutique guest house, no swimming pool).',
+    descriptionId: 'The Wina Echo Beach Guest House merupakan suaka tropis yang tenang di dalam gang privat Jl. Pantai Batu Bolong, hanya 350 meter (4 menit berjalan kaki) dari Pantai Echo Beach dan beach club populer seperti La Brisa.\n\nAkomodasi ini menampilkan keindahan arsitektur khas Bali dengan pintu kayu berukir artistik, teras berkanopi dengan kursi santai menghadap jalan setapak taman tropis, serta lantai keramik yang sejuk dan bersih. Tersedia pilihan Kamar Deluxe Double ber-AC dengan kasur empuk dan lemari pakaian, Kamar Superior dengan pencahayaan alami yang cerah, serta Kamar Quadruple luas dengan 4 kasur single terpisah yang sangat cocok untuk rombongan peselancar, sahabat, maupun keluarga.\n\nSetiap kamar memiliki kamar mandi dalam pribadi dengan shower air hangat, koneksi Wi-Fi fiber optik berkecepatan tinggi, akses dapur bersama, serta layanan kebersihan kamar harian. Nikmati kenyamanan istirahat yang hening tanpa bising jalan raya beberapa langkah dari ombak terbaik Canggu (penginapan butik yang tenang, tanpa kolam renang).',
     location: 'Jl. Pantai Batu Bolong No. 21, Canggu, Bali',
     neighborhood: 'Batu Bolong / Echo Beach, Canggu',
     distanceToBeach: '350m (4 min walk to Echo Beach)',
-    heroImage: echoBeachImg,
+    heroImage: echoBeachPhoto1,
     gallery: [
-      echoBeachImg,
-      heroImg,
-      ambienceImg,
+      echoBeachPhoto1,
+      echoBeachPhoto2,
+      echoBeachPhoto3,
+      echoBeachPhoto4,
     ],
     startingPriceIdr: 330000,
     priceNoteEn: 'Starting from Rp330,000/night. Confirmed directly via official Booking.com reservation.',
@@ -79,9 +134,17 @@ export const initialProperties: Property[] = [
     otaStatus: 'verified',
     bookingUrl: 'https://www.booking.com/hotel/id/the-wina-echo-beach-guest-house.id.html',
     bookingUrlKey: 'bookingUrlEchoBeach',
-    capacity: '2 Adults per room',
-    roomTypesEn: ['Deluxe King Room with Balcony', 'Superior Double Room with Private Balcony', 'Standard Queen Room'],
-    roomTypesId: ['Deluxe King Room dengan Balkon', 'Superior Double Room dengan Balkon Pribadi', 'Standard Queen Room'],
+    capacity: '2 - 4 Guests per room',
+    roomTypesEn: [
+      'Deluxe Double Room with Private Terrace',
+      'Quadruple Room with 4 Single Beds (Surf & Family)',
+      'Superior Double Room with Garden View',
+    ],
+    roomTypesId: [
+      'Kamar Deluxe Double dengan Teras Pribadi',
+      'Kamar Quadruple dengan 4 Kasur Single (Keluarga & Selancar)',
+      'Kamar Superior Double Pemandangan Taman',
+    ],
     checkIn: '14:00 - 22:00 WITA',
     checkOut: '12:00 WITA',
     amenities: [
@@ -93,16 +156,20 @@ export const initialProperties: Property[] = [
       { icon: 'Sparkles', nameEn: 'Room Cleaning Service', nameId: 'Layanan Pembersihan Kamar' },
     ],
     highlightsEn: [
-      'Walking distance to Echo Beach and seaside cafes like La Brisa',
-      'Quiet alley setting away from main road traffic noise',
-      'Dedicated workspace desk and high-speed Wi-Fi in every room',
-      'Friendly local Balinese host assistance on-site',
+      'Walking distance (350m / 4 min) to Echo Beach and seaside venues like La Brisa',
+      'Authentic Balinese carved wooden doors and shaded private verandas with garden seating',
+      'Quadruple room option with 4 single beds ideal for surf crews & groups',
+      'Ensuite bathrooms with hot water showers in every room',
+      'Individual air conditioning and high-speed fiber Wi-Fi throughout',
+      'Tucked inside a quiet residential alley away from main road traffic noise',
     ],
     highlightsId: [
-      'Jalan kaki mudah ke Pantai Echo Beach dan beach club populer seperti La Brisa',
-      'Lokasi tenang di dalam gang, jauh dari kebisingan jalan raya',
-      'Meja kerja khusus dan internet kencang di setiap kamar',
-      'Pelayanan staf lokal Bali yang ramah dan siap membantu',
+      'Hanya 350 meter (4 menit jalan kaki) ke Pantai Echo Beach dan beach club La Brisa',
+      'Pintu kayu berukir khas Bali dan teras santai berkanopi menghadap taman',
+      'Pilihan Kamar Quadruple dengan 4 kasur single untuk rombongan peselancar & keluarga',
+      'Kamar mandi dalam dengan shower air hangat di setiap kamar',
+      'Pendingin udara (AC) di setiap kamar dan Wi-Fi fiber optik kencang',
+      'Lokasi tenang di dalam gang privat, bebas dari bising knalpot jalan raya',
     ],
     googleMapsUrl: 'https://maps.google.com/?q=The+Wina+Echo+Beach+Guest+House,+Jl.+Pantai+Batu+Bolong+No.+21,+Canggu,+Bali',
     googleDirectionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=The+Wina+Echo+Beach+Guest+House,+Jl.+Pantai+Batu+Bolong+No.+21,+Canggu,+Bali',
@@ -118,10 +185,22 @@ export const initialProperties: Property[] = [
     ],
     faqs: [
       {
+        questionEn: 'What room types are available at The Wina Echo Beach Guest House?',
+        questionId: 'Apa saja tipe kamar yang tersedia di The Wina Echo Beach Guest House?',
+        answerEn: 'We offer Deluxe Double Rooms with comfortable double beds and private terraces, Quadruple Rooms with 4 separate single beds (ideal for groups or surfers), and Superior Double Rooms with natural daylight, all featuring AC and private ensuite bathrooms.',
+        answerId: 'Tersedia Kamar Deluxe Double dengan kasur double nyaman dan teras pribadi, Kamar Quadruple dengan 4 kasur single terpisah (cocok untuk peselancar atau keluarga), serta Kamar Superior Double dengan pencahayaan alami, seluruhnya dilengkapi AC dan kamar mandi dalam.',
+      },
+      {
         questionEn: 'How close is The Wina Echo Beach Guest House to the surf break?',
         questionId: 'Berapa jarak The Wina Echo Beach Guest House ke spot surfing?',
         answerEn: 'The property is approximately 350 meters from Echo Beach, which takes around 4 minutes by foot.',
         answerId: 'Akomodasi berjarak sekitar 350 meter dari Pantai Echo Beach, sekitar 4 menit berjalan kaki.',
+      },
+      {
+        questionEn: 'Is there a swimming pool at The Wina Echo Beach Guest House?',
+        questionId: 'Apakah ada kolam renang di The Wina Echo Beach Guest House?',
+        answerEn: 'The Wina Echo Beach Guest House does not have a swimming pool, offering a quiet, intimate sanctuary away from crowds just steps from the beach waves. (For guests seeking a pool, our sister property The Wina Guest House 3 includes a swimming pool).',
+        answerId: 'The Wina Echo Beach Guest House tidak memiliki kolam renang, menjadikannya pilihan suaka yang tenang, hening, dan privat dekat pantai. (Bagi tamu yang membutuhkan kolam renang, properti The Wina Guest House 3 kami menyediakan fasilitas kolam renang).',
       },
       {
         questionEn: 'Can I rent a scooter or arrange airport pickup?',
@@ -136,26 +215,27 @@ export const initialProperties: Property[] = [
         answerId: 'Ya, kami menyediakan koneksi internet fiber optik cepat yang stabil untuk video call maupun streaming.',
       },
     ],
-    seoTitle: 'The Wina Echo Beach Guest House | Stay in Canggu, Bali',
-    seoDescription: 'Stay comfortably in Canggu, Bali at The Wina Echo Beach Guest House near Echo Beach & Batu Bolong. Verified amenities: AC, hot water, strong Wi-Fi, kitchen, parking, and daily room cleaning.',
+    seoTitle: 'The Wina Echo Beach Guest House | Authentic Stay Near Echo Beach Canggu',
+    seoDescription: 'Stay 350m from Echo Beach surf. Authentic Balinese carved doors, private verandas, AC deluxe double & 4-bed quadruple rooms, ensuite hot shower, fiber Wi-Fi.',
   },
   {
     id: 'guest-house-2',
     name: 'The Wina Guest House 2',
     shortName: 'Guest House 2',
     category: 'guesthouse',
-    taglineEn: 'Calm, minimalist retreat near vibrant Batu Bolong and Canggu’s best artisanal cafes.',
-    taglineId: 'Suasana tenang dan minimalis dekat pusat kuliner dan kafe hits Batu Bolong Canggu.',
-    descriptionEn: 'The Wina Guest House 2 is tailored for travelers seeking peaceful relaxation close to the energetic social heart of Canggu. Featuring bright rooms with natural daylight, en-suite modern bathrooms, comfortable shared spaces, and easy scooter access to both Batu Bolong and Echo Beach.',
-    descriptionId: 'The Wina Guest House 2 dirancang khusus untuk Anda yang mendambakan kenyamanan dan ketenangan di dekat pusat keramaian Canggu. Memiliki kamar terang dengan pencahayaan alami, kamar mandi pribadi modern, suasana hunian asri, serta akses cepat ke Jalan Pantai Batu Bolong.',
+    taglineEn: 'Tranquil garden retreat with AC queen rooms, private bathrooms, and sunny verandas near Nelayan Beach Canggu.',
+    taglineId: 'Penginapan taman yang tenang dengan kamar queen ber-AC, kamar mandi dalam, dan teras santai dekat Pantai Nelayan Canggu.',
+    descriptionEn: 'The Wina Guest House 2 is a tranquil boutique retreat situated on Jalan Nelayan in Subak Ambengan, Canggu, just an 800-meter stroll or 3-minute scooter ride from Nelayan Beach and minutes from vibrant Batu Bolong.\n\nFeaturing bright, air-conditioned guest bedrooms with comfortable queen and double beds, crisp white linens, natural daylight, practical workspace desks, and tiled flooring. Guests enjoy a lush tropical central garden courtyard filled with palms and green landscaping, covered outdoor verandas, and open-air balcony walkways overlooking the grounds.\n\nEach room includes a private en-suite bathroom with walk-in hot water shower and modern vanity, fast fiber-optic Wi-Fi, car and scooter parking inside the property gate, shared kitchen facilities, and daily room cleaning. Tucked into a quiet residential lane, it provides an idyllic, restorative haven for digital nomads, couples, and island travelers (quiet residential setting, no swimming pool).',
+    descriptionId: 'The Wina Guest House 2 merupakan akomodasi butik yang tenang dan asri di Jalan Nelayan, Subak Ambengan, Canggu, berjarak hanya 800 meter (3 menit berkendara motor) dari Pantai Nelayan dan beberapa menit dari pusat kafe hits Batu Bolong.\n\nGuest house ini memiliki kamar-kamar tidur ber-AC yang nyaman dengan pilihan kasur queen dan double empuk, sprei putih bersih, pencahayaan alami yang melimpah, meja kerja, dan lantai keramik yang sejuk. Tamu dapat menikmati suasana asri halaman taman tropis tengah yang dipenuhi pohon palem rimbun, teras berkanopi santai, serta koridor balkon terbuka menghadap taman hijau.\n\nSetiap kamar dilengkapi kamar mandi dalam pribadi dengan shower air hangat dan cermin wastafel, koneksi Wi-Fi cepat, area parkir mobil dan motor yang aman, fasilitas dapur bersama, serta layanan kebersihan harian. Terletak di kawasan pemukiman yang damai, tempat ini menghadirkan suasana istirahat yang hening dan menyegarkan bagi para pelancong maupun digital nomad (penginapan taman yang tenang, tanpa kolam renang).',
     location: 'Jalan Nelayan, Subak Ambengan, Canggu, Bali 80361',
     neighborhood: 'Nelayan / Subak Ambengan, Canggu',
     distanceToBeach: '800m (3 min scooter ride to Nelayan Beach)',
-    heroImage: heroImg,
+    heroImage: gh2Photo1,
     gallery: [
-      heroImg,
-      echoBeachImg,
-      ambienceImg,
+      gh2Photo1,
+      gh2Photo2,
+      gh2Photo3,
+      gh2Photo4,
     ],
     startingPriceIdr: 250000,
     priceNoteEn: 'Starting from Rp250,000/night. Confirmed directly via official Booking.com reservation (Property ID: 2037301).',
@@ -166,8 +246,8 @@ export const initialProperties: Property[] = [
     bookingUrl: 'https://www.booking.com/hotel/id/the-wina-guest-house-2.id.html',
     bookingUrlKey: 'bookingUrlGuestHouse2',
     capacity: '2 Adults per room',
-    roomTypesEn: ['Superior Double Room with Garden View', 'Deluxe Queen Room', 'Standard Double Room'],
-    roomTypesId: ['Superior Double Room dengan Pemandangan Taman', 'Deluxe Queen Room', 'Standard Double Room'],
+    roomTypesEn: ['Deluxe Queen Room with Workspace Desk', 'Superior Double Room with Garden View', 'Standard Double Room'],
+    roomTypesId: ['Kamar Deluxe Queen dengan Meja Kerja', 'Kamar Superior Double Pemandangan Taman', 'Kamar Standard Double Ber-AC'],
     checkIn: '14:00 - 22:00 WITA',
     checkOut: '12:00 WITA',
     amenities: [
@@ -179,24 +259,29 @@ export const initialProperties: Property[] = [
       { icon: 'Sparkles', nameEn: 'Room Cleaning Service', nameId: 'Layanan Pembersihan Kamar' },
     ],
     highlightsEn: [
-      'Strategic position between Batu Bolong and Nelayan Beach',
-      'Intimate property with limited rooms for guaranteed privacy',
-      'Sunny terrace area with comfortable outdoor seating',
-      'Steps away from popular bakeries, pilates studios, and boutique eateries',
+      'Walking or short scooter distance (800m / 3 min) to Nelayan Beach and Batu Bolong',
+      'Bright AC queen bedrooms with clean linens and work desks',
+      'Private en-suite bathrooms with hot water showers in every room',
+      'Lush tropical central garden courtyard and covered outdoor veranda walkways',
+      'Quiet residential location in Subak Ambengan away from main road traffic',
+      'High-speed Wi-Fi, daily housekeeping, and secure scooter parking',
     ],
     highlightsId: [
-      'Posisi strategis antara Batu Bolong dan Pantai Nelayan',
-      'Jumlah kamar terjaga sehingga suasana tetap tenang dan privat',
-      'Area teras santai terbuka yang asri dengan tempat duduk nyaman',
-      'Dekat dengan kafe roti, studio pilates, dan restoran hits',
+      'Hanya 800 meter (3 menit berkendara motor) ke Pantai Nelayan dan kawasan Batu Bolong',
+      'Kamar queen ber-AC cerah dengan sprei bersih & meja kerja',
+      'Kamar mandi dalam pribadi dengan shower air hangat di setiap kamar',
+      'Halaman taman tropis tengah yang asri dan koridor teras santai berkanopi',
+      'Lokasi pemukiman tenang di Subak Ambengan, bebas bising jalan raya utama',
+      'Wi-Fi cepat, layanan pembersihan harian, dan area parkir motor yang aman',
     ],
-    googleMapsUrl: 'https://maps.google.com/?q=The+Wina+Guest+House+2,+Jalan+Nelayan,+Subak+Ambengan,+Canggu,+Bali+80361',
+    googleMapsUrl: 'https://maps.google.com/?q=The+Wina+Guest+House+2,+Jalan+Nelayan,+Subak+Ambengan,+Canggu,+Bali 80361',
     googleDirectionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=The+Wina+Guest+House+2,+Jalan+Nelayan,+Subak+Ambengan,+Canggu,+Bali+80361',
     googleMapsEmbedQuery: 'Jalan Nelayan, Subak Ambengan, Canggu, Bali 80361',
     canonicalSlug: 'the-wina-guest-house-2',
     canonicalUrl: '/properties/the-wina-guest-house-2',
     targetKeywords: [
       'The Wina Guest House 2',
+      'guest house near Nelayan Beach',
       'affordable guest house Canggu',
       'guest house in Canggu',
       'accommodation near Jalan Nelayan',
@@ -204,20 +289,38 @@ export const initialProperties: Property[] = [
     ],
     faqs: [
       {
-        questionEn: 'Is parking available at The Wina Guest House 2?',
-        questionId: 'Apakah tersedia parkir di The Wina Guest House 2?',
-        answerEn: 'Yes, we provide secure on-site scooter parking inside the property gate.',
-        answerId: 'Ya, tersedia tempat parkir sepeda motor yang aman di dalam gerbang properti.',
+        questionEn: 'What room types and facilities are available at The Wina Guest House 2?',
+        questionId: 'Apa saja tipe kamar dan fasilitas yang tersedia di The Wina Guest House 2?',
+        answerEn: 'Our property offers Deluxe Queen and Superior Double Bedrooms with private ensuite bathrooms, hot showers, air conditioning, fast Wi-Fi, tropical garden courtyard, and covered outdoor verandas.',
+        answerId: 'Properti kami menawarkan Kamar Deluxe Queen dan Superior Double dengan kamar mandi dalam, shower air hangat, AC, Wi-Fi cepat, taman tropis, serta teras luar ruangan berkanopi.',
       },
       {
-        questionEn: 'What are the check-in times?',
-        questionId: 'Kapan waktu check-in dan check-out?',
-        answerEn: 'Standard check-in begins at 14:00 WITA and check-out is by 12:00 WITA.',
-        answerId: 'Waktu check-in mulai pukul 14:00 WITA dan check-out paling lambat pukul 12:00 WITA.',
+        questionEn: 'Is there a swimming pool at The Wina Guest House 2?',
+        questionId: 'Apakah ada kolam renang di The Wina Guest House 2?',
+        answerEn: 'The Wina Guest House 2 does not have a swimming pool, offering a quiet, intimate sanctuary and tranquil tropical garden courtyard away from crowds in Jalan Nelayan Canggu. (For guests seeking a pool, our sister property The Wina Guest House 3 includes a swimming pool).',
+        answerId: 'The Wina Guest House 2 tidak memiliki kolam renang, menjadikannya pilihan penginapan taman yang tenang, hening, dan privat di Jalan Nelayan Canggu. (Bagi tamu yang membutuhkan kolam renang, properti The Wina Guest House 3 kami menyediakan fasilitas kolam renang).',
+      },
+      {
+        questionEn: 'How far is The Wina Guest House 2 from the beach?',
+        questionId: 'Berapa jarak The Wina Guest House 2 ke pantai?',
+        answerEn: 'The property is approximately 800 meters from Nelayan Beach (about 3 minutes by scooter or a short stroll) and minutes to Batu Bolong beach and cafes.',
+        answerId: 'Akomodasi berjarak sekitar 800 meter dari Pantai Nelayan (sekitar 3 menit naik motor atau jalan santai) dan sangat dekat ke Pantai Batu Bolong.',
+      },
+      {
+        questionEn: 'Is on-site scooter parking available?',
+        questionId: 'Apakah tersedia parkir motor di lokasi?',
+        answerEn: 'Yes, we provide safe on-site motorbike parking inside the property premises.',
+        answerId: 'Ya, kami menyediakan tempat parkir motor yang aman di dalam area properti.',
+      },
+      {
+        questionEn: 'Is there fast Wi-Fi for remote work or digital nomads?',
+        questionId: 'Apakah tersedia Wi-Fi kencang untuk kerja / WFH?',
+        answerEn: 'Yes, reliable high-speed fiber internet is provided throughout all rooms and shared verandas.',
+        answerId: 'Ya, koneksi internet Wi-Fi fiber optik berkecepatan tinggi tersedia di semua kamar dan area teras.',
       },
     ],
-    seoTitle: 'The Wina Guest House 2 | Affordable Accommodation in Canggu',
-    seoDescription: 'Discover an affordable stay in Canggu, Bali at The Wina Guest House 2 near Jalan Nelayan. Verified amenities: AC, hot water, strong Wi-Fi, kitchen, parking, and room cleaning.',
+    seoTitle: 'The Wina Guest House 2 | Authentic Stay Near Nelayan Beach Canggu',
+    seoDescription: 'Stay 800m from Nelayan Beach Canggu. AC queen rooms, private ensuite hot showers, lush tropical garden, verandas, fast Wi-Fi, no pool.',
   },
   {
     id: 'guest-house-3',
@@ -231,12 +334,12 @@ export const initialProperties: Property[] = [
     location: 'Jl. Pantai Batu Bolong No. 20 D, Canggu, Bali',
     neighborhood: 'Batu Bolong, Canggu',
     distanceToBeach: '800m (3 min scooter ride to Batu Bolong Beach)',
-    heroImage: ambienceImg,
+    heroImage: gh3Photo1,
     gallery: [
-      ambienceImg,
-      echoBeachImg,
-      heroImg,
-      villaPoolImg,
+      gh3Photo1,
+      gh3Photo2,
+      gh3Photo3,
+      gh3Photo4,
     ],
     startingPriceIdr: 400000,
     priceNoteEn: 'Starting from Rp400,000/night. Confirmed directly via official Booking.com reservation.',
@@ -312,12 +415,12 @@ export const initialProperties: Property[] = [
     location: 'Jl. Pantai Batu Bolong, Jl. Subak Canggu, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali 80361',
     neighborhood: 'Subak Canggu / Batu Bolong, Canggu',
     distanceToBeach: '1.2km (4 min scooter ride to Batu Bolong Beach)',
-    heroImage: villaPoolImg,
+    heroImage: villa01Photo1,
     gallery: [
-      villaPoolImg,
-      heroImg,
-      echoBeachImg,
-      ambienceImg,
+      villa01Photo1,
+      villa01Photo2,
+      villa01Photo3,
+      villa01Photo4,
     ],
     startingPriceIdr: 1635000,
     priceNoteEn: 'Starting from Rp1,635,000/night for entire private villa. Confirmed directly via official Trip.com reservation (Hotel ID: 120788345).',
@@ -388,12 +491,12 @@ export const initialProperties: Property[] = [
     location: 'Jl. Pantai Batu Bolong, Jl. Subak Canggu, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali 80361',
     neighborhood: 'Subak Canggu / Batu Bolong, Canggu',
     distanceToBeach: '1.2km (4 min scooter ride to Batu Bolong Beach)',
-    heroImage: villaPoolImg,
+    heroImage: villa02Photo1,
     gallery: [
-      villaPoolImg,
-      ambienceImg,
-      heroImg,
-      echoBeachImg,
+      villa02Photo1,
+      villa02Photo2,
+      villa02Photo3,
+      villa02Photo4,
     ],
     startingPriceIdr: 1635000,
     priceNoteEn: 'Starting from Rp1,635,000/night for entire private villa. Online OTA listing coming soon. Direct inquiries available via WhatsApp.',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Compass, Calendar, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
-import heroImage from '@/src/assets/images/hero_bali_resort_1791004276796.jpg';
+import heroImage from '@/src/assets/images/regenerated_image_1791639368931.webp';
 import { Language, translations } from '@/src/data/translations';
 
 interface HeroProps {

@@ -63,6 +63,11 @@ export const translations = {
       viewDetails: 'View Details',
       bookOnBooking: 'Book on Booking.com',
       directWa: 'Chat WhatsApp',
+      viewAllPhotos: 'View All Photos',
+      viewGallery: 'View Gallery',
+      authenticPhotosBadge: 'Authentic Verified Photos',
+      featuredEchoBeachTitle: 'Featured Property · The Wina Echo Beach Guest House',
+      noPoolNotice: 'Quiet property without swimming pool (Echo Beach surf sanctuary)',
     },
     whyUs: {
       kicker: 'The Wina Hospitality Standard',
@@ -220,6 +225,11 @@ export const translations = {
       viewDetails: 'Lihat Detail',
       bookOnBooking: 'Pesan di Booking.com',
       directWa: 'Chat WhatsApp',
+      viewAllPhotos: 'Lihat Semua Foto',
+      viewGallery: 'Lihat Galeri',
+      authenticPhotosBadge: 'Foto Asli Terverifikasi',
+      featuredEchoBeachTitle: 'Properti Pilihan · The Wina Echo Beach Guest House',
+      noPoolNotice: 'Properti tenang tanpa kolam renang (Suaka dekat pantai Echo Beach)',
     },
     whyUs: {
       kicker: 'Standar The Wina Hospitality',

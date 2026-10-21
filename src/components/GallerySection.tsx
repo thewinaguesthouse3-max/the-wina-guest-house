@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImg from '@/src/assets/images/hero_bali_resort_1791004276796.jpg';
-import echoBeachImg from '@/src/assets/images/wina_echo_beach_room_1791004290768.jpg';
+import roomImg from '@/src/assets/images/wina_echo_beach_room_1791004290768.jpg';
 import villaPoolImg from '@/src/assets/images/wina_villa_pool_1791004304004.jpg';
 import ambienceImg from '@/src/assets/images/bali_canggu_ambience_1791004314788.jpg';
 import { Language, translations } from '@/src/data/translations';
@@ -23,10 +23,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ currentLang }) =
       property: 'The Wina Hospitality Sanctuary',
     },
     {
-      src: echoBeachImg,
-      title: 'Deluxe King Bedroom with Natural Light',
+      src: roomImg,
+      title: 'Deluxe Guest Room with Crisp Linens',
       category: 'rooms',
-      property: 'The Wina Echo Beach Guest House',
+      property: 'The Wina Guest House 2',
     },
     {
       src: villaPoolImg,
@@ -41,10 +41,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ currentLang }) =
       property: 'The Wina Guest House 3',
     },
     {
-      src: echoBeachImg,
-      title: 'Minimalist Balinese Interiors & Fine Linens',
-      category: 'guesthouses',
-      property: 'The Wina Guest House 2',
+      src: roomImg,
+      title: 'Balinese Carved Door & Veranda View',
+      category: 'rooms',
+      property: 'The Wina Echo Beach Guest House',
     },
     {
       src: villaPoolImg,
