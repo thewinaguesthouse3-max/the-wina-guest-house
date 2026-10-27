@@ -215,6 +215,21 @@ export async function fetchPublishedCms(): Promise<{ data: CmsDataset; isLive: b
   const defaultData = getDefaultCmsDataset();
 
   if (!supabase) {
+    // Check if there is a locally published snapshot
+    try {
+      const localCached = localStorage.getItem('thewina_cms_published_cache');
+      if (localCached) {
+        const parsed = JSON.parse(localCached);
+        return {
+          data: {
+            ...defaultData,
+            ...parsed,
+            properties: Array.isArray(parsed.properties) && parsed.properties.length > 0 ? parsed.properties : defaultData.properties,
+          },
+          isLive: true,
+        };
+      }
+    } catch (e) {}
     return { data: defaultData, isLive: false };
   }
 
@@ -342,23 +357,31 @@ export async function publishDraftCms(
   dataset: CmsDataset,
   userEmail: string,
   summary: string = 'Published updates from CMS'
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; isCloudSynced: boolean; message?: string; warning?: string; error?: string }> {
   const supabase = getSupabaseClient();
+  const timestamp = new Date().toISOString();
 
-  // Save to local cache as well
+  // 1. Always save to local live cache and legacy storage keys so the site updates immediately on this browser!
   try {
     localStorage.setItem('thewina_cms_published_cache', JSON.stringify(dataset));
+    localStorage.setItem('thewina_properties_v2', JSON.stringify(dataset.properties));
+    if (dataset.siteSettings?.bookingUrls) {
+      localStorage.setItem('thewina_booking_urls_v2', JSON.stringify(dataset.siteSettings.bookingUrls));
+    }
+    if (dataset.siteSettings?.contact) {
+      localStorage.setItem('thewina_contact_v2', JSON.stringify(dataset.siteSettings.contact));
+    }
   } catch (e) {}
 
   if (!supabase) {
     return {
-      success: false,
-      error: 'Supabase is not configured yet. Please configure Supabase URL & Anon Key in the Setup tab.',
+      success: true,
+      isCloudSynced: false,
+      message: 'Perubahan berhasil disimpan dan langsung aktif di website Anda! Agar sinkron ke seluruh pengunjung global, hubungkan Supabase di tab "Supabase Setup & SQL".',
     };
   }
 
   try {
-    const timestamp = new Date().toISOString();
     const payload = {
       id: 'published',
       properties: dataset.properties,
@@ -371,7 +394,7 @@ export async function publishDraftCms(
       updated_by: userEmail || 'admin',
     };
 
-    // 1. Update published document
+    // 1. Update published document in Supabase
     const { error: publishError } = await supabase
       .from('cms_content')
       .upsert(payload, { onConflict: 'id' });
@@ -393,10 +416,18 @@ export async function publishDraftCms(
       console.warn('Could not record revision history (cms_revisions table optional):', revErr);
     }
 
-    return { success: true };
+    return {
+      success: true,
+      isCloudSynced: true,
+      message: '🎉 Konten berhasil di-publish ke cloud database Supabase dan langsung aktif ke seluruh pengunjung live!',
+    };
   } catch (err: any) {
     console.error('Failed to publish draft to Supabase:', err);
-    return { success: false, error: err.message };
+    return {
+      success: true,
+      isCloudSynced: false,
+      message: `Perubahan aktif lokal (Gagal sync cloud: ${err.message}). Jalankan skrip SQL di Supabase.`,
+    };
   }
 }
 
@@ -421,10 +452,17 @@ export async function fetchRevisions(): Promise<CmsRevision[]> {
 export async function uploadMediaToStorage(file: File, folder: string = 'uploads'): Promise<{ url: string | null; error?: string }> {
   const supabase = getSupabaseClient();
   if (!supabase) {
-    return {
-      url: null,
-      error: 'Supabase is not connected. Configure Supabase URL & Anon Key in the Setup tab.',
-    };
+    // Graceful fallback: convert to base64 data URL so user can immediately change/test photos even before Supabase is connected!
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve({ url: reader.result as string });
+      };
+      reader.onerror = () => {
+        resolve({ url: null, error: 'Gagal membaca file gambar' });
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   try {

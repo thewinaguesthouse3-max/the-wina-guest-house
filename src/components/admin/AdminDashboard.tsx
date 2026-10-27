@@ -225,7 +225,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       if (res.success) {
         setIsDirty(false);
         setShowPublishModal(false);
-        setStatusMessage({ type: 'success', text: '🎉 Content published to live website successfully!' });
+        setStatusMessage({
+          type: 'success',
+          text: res.message || '🎉 Content published to live website successfully!',
+        });
         if (onPublishSuccess) {
           onPublishSuccess(dataset);
         }
