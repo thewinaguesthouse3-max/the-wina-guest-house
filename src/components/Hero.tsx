@@ -1,6 +1,6 @@
 import React from 'react';
 import { Compass, Calendar, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
-import heroImage from '@/src/assets/images/regenerated_image_1791639368931.webp';
+import heroImage from '@/src/assets/images/properties/villa-02/photo-1.webp';
 import { Language, translations } from '@/src/data/translations';
 
 interface HeroProps {
@@ -19,6 +19,8 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onExplore, onBook }) =>
         <img
           src={heroImage}
           alt="The Wina Hospitality Bali resort swimming pool and tropical lush sanctuary in Canggu"
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out"
           referrerPolicy="no-referrer"
         />

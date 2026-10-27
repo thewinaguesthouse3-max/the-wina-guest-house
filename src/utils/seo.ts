@@ -4,7 +4,7 @@ import { BlogPost } from '@/src/data/blog';
 const DEFAULT_TITLE = 'The Wina Hospitality | Luxury Accommodations in Bali';
 const DEFAULT_DESC =
   'Discover your perfect stay in Bali with The Wina Hospitality. Premium guest houses and private villas in Canggu and Echo Beach.';
-const PRODUCTION_SITE_URL = 'https://thewina-hospitality.com';
+const PRODUCTION_SITE_URL = 'https://www.thewinahospitality.com';
 export const SITE_URL = PRODUCTION_SITE_URL;
 export const DEFAULT_OG_IMAGE = `${PRODUCTION_SITE_URL}/og-image.jpg`;
 

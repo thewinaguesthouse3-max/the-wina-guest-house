@@ -24,19 +24,19 @@ import echoBeachPhoto3 from '@/src/assets/images/properties/echo-beach/photo-3.a
 import echoBeachPhoto4 from '@/src/assets/images/properties/echo-beach/photo-4.jpg';
 
 // --- The Wina Guest House 2 (Independent Slots 1-4) ---
-import gh2Photo1 from '@/src/assets/images/properties/guest-house-2/photo-1.png';
+import gh2Photo1 from '@/src/assets/images/properties/guest-house-2/photo-1.jpg';
 import gh2Photo2 from '@/src/assets/images/properties/guest-house-2/photo-2.jpg';
 import gh2Photo3 from '@/src/assets/images/properties/guest-house-2/photo-3.jpg';
 import gh2Photo4 from '@/src/assets/images/properties/guest-house-2/photo-4.png';
 
 // --- The Wina Guest House 3 (Independent Slots 1-4) ---
 import gh3Photo1 from '@/src/assets/images/properties/guest-house-3/photo-1.jpg';
-import gh3Photo2 from '@/src/assets/images/properties/guest-house-3/photo-2.png';
+import gh3Photo2 from '@/src/assets/images/properties/guest-house-3/photo-2.jpg';
 import gh3Photo3 from '@/src/assets/images/properties/guest-house-3/photo-3.jpg';
 import gh3Photo4 from '@/src/assets/images/properties/guest-house-3/photo-4.png';
 
 // --- The Wina Villa 01 (Independent Slots 1-4) ---
-import villa01Photo1 from '@/src/assets/images/properties/villa-01/photo-1.png';
+import villa01Photo1 from '@/src/assets/images/properties/villa-01/photo-1.jpg';
 import villa01Photo2 from '@/src/assets/images/properties/villa-01/photo-2.jpg';
 import villa01Photo3 from '@/src/assets/images/properties/villa-01/photo-3.jpg';
 import villa01Photo4 from '@/src/assets/images/properties/villa-01/photo-4.jpg';

@@ -189,6 +189,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({
             key={currentPhoto.src}
             src={currentPhoto.src}
             alt={photoTitle}
+            decoding="async"
             className="max-h-[70vh] sm:max-h-[74vh] w-auto max-w-[94vw] sm:max-w-[85vw] object-contain rounded-lg shadow-2xl transition-all duration-300 select-none animate-fadeIn"
             referrerPolicy="no-referrer"
           />

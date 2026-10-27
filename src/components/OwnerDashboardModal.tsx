@@ -858,7 +858,7 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                               Discover your perfect stay in Bali with The Wina Hospitality. Premium guest houses and private villas in Canggu.
                             </p>
                             <p className="text-[9px] text-[#8696A0] uppercase font-mono mt-1">
-                              thewina-hospitality.com
+                              thewinahospitality.com
                             </p>
                           </div>
                         </div>
@@ -886,7 +886,7 @@ export const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({
                       />
                       <div className="p-3 bg-[#F7F9F9] border-t border-[#EFF3F4]">
                         <p className="text-[11px] text-[#536471] font-mono">
-                          thewina-hospitality.com
+                          thewinahospitality.com
                         </p>
                         <p className="text-xs font-bold text-[#0F1419] mt-0.5 line-clamp-1">
                           The Wina Hospitality | Luxury Accommodations in Bali

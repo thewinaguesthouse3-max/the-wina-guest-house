@@ -76,6 +76,8 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ currentLang, onReadPos
                   <img
                     src={post.coverImage}
                     alt={currentLang === 'id' ? post.titleId : post.titleEn}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                     referrerPolicy="no-referrer"
                   />

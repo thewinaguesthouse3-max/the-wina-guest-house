@@ -21,6 +21,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang, onExplo
               <img
                 src={ambienceImage}
                 alt="Tropical pathway and boutique hospitality ambiance at The Wina Canggu Bali"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-[460px] object-cover object-center"
                 referrerPolicy="no-referrer"
               />

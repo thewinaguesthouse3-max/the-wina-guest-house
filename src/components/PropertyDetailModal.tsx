@@ -169,6 +169,7 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
               <img
                 src={property.gallery[activeImageIndex] || property.heroImage}
                 alt={`${property.name} showcase`}
+                decoding="async"
                 className="w-full h-full object-cover object-center transition-all duration-300 group-hover:scale-102"
                 referrerPolicy="no-referrer"
               />
@@ -205,6 +206,8 @@ export const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({
                   <img
                     src={img}
                     alt={`Thumbnail ${idx + 1}`}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />

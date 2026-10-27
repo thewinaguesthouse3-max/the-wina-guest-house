@@ -28,6 +28,8 @@ import { LegalModals } from '@/src/components/LegalModals';
 import { Property, initialProperties } from '@/src/data/properties';
 import { BlogPost, blogPosts } from '@/src/data/blog';
 import { Language } from '@/src/data/translations';
+import { AdminDashboard } from '@/src/components/admin/AdminDashboard';
+import { fetchPublishedCms, CmsDataset } from '@/src/services/supabase';
 import {
   BookingUrlsConfig,
   ContactConfig,
@@ -58,12 +60,34 @@ export default function App() {
     });
   });
 
-  // Modals state
+  // Modals & Navigation state
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [ownerPortalOpen, setOwnerPortalOpen] = useState(false);
   const [semLandingOpen, setSemLandingOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<'terms' | 'privacy' | null>(null);
+
+  // CMS Admin & Preview States
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin') || window.location.search.includes('admin=1');
+    }
+    return false;
+  });
+  const [previewDraftData, setPreviewDraftData] = useState<CmsDataset | null>(null);
+  const [activeBlogPosts, setActiveBlogPosts] = useState<BlogPost[]>(blogPosts);
+
+  // Synchronize published content from Supabase cloud database
+  useEffect(() => {
+    fetchPublishedCms().then(({ data, isLive }) => {
+      if (isLive && data.properties && data.properties.length > 0) {
+        setProperties(data.properties);
+        if (data.siteSettings?.bookingUrls) setBookingUrls(data.siteSettings.bookingUrls);
+        if (data.siteSettings?.contact) setContactConfig(data.siteSettings.contact);
+        if (data.blogPosts && data.blogPosts.length > 0) setActiveBlogPosts(data.blogPosts);
+      }
+    });
+  }, []);
 
   // Synchronize language with local storage
   useEffect(() => {
@@ -155,6 +179,16 @@ export default function App() {
       if (typeof window === 'undefined') return;
       const pathname = window.location.pathname;
 
+      // Check Admin CMS URL
+      if (pathname === '/admin' || pathname.startsWith('/admin') || window.location.search.includes('admin=1')) {
+        setIsAdminRoute(true);
+        setSelectedProperty(null);
+        setSelectedPost(null);
+        return;
+      } else {
+        setIsAdminRoute(false);
+      }
+
       // Check property URL
       if (pathname.startsWith('/properties/')) {
         const slug = pathname.replace('/properties/', '');
@@ -176,7 +210,7 @@ export default function App() {
       // Check blog URL
       if (pathname.startsWith('/blog/')) {
         const slug = pathname.replace('/blog/', '');
-        const matchedPost = blogPosts.find((p) => p.slug === slug || p.canonicalUrl === pathname);
+        const matchedPost = activeBlogPosts.find((p) => p.slug === slug || p.canonicalUrl === pathname);
         if (matchedPost) {
           setSelectedPost(matchedPost);
           setSelectedProperty(null);
@@ -207,7 +241,16 @@ export default function App() {
     handleUrlRoute();
     window.addEventListener('popstate', handleUrlRoute);
     return () => window.removeEventListener('popstate', handleUrlRoute);
-  }, [properties]);
+  }, [properties, activeBlogPosts]);
+
+  const handleOpenAdmin = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState(null, '', '/admin');
+      } catch (e) {}
+    }
+    setIsAdminRoute(true);
+  };
 
   const handleOpenWhatsAppInquiry = (prop?: Property) => {
     const propId = prop?.id || 'general';
@@ -263,14 +306,84 @@ export default function App() {
     setProperties(initialProperties);
   };
 
+  if (isAdminRoute) {
+    return (
+      <AdminDashboard
+        onBackToSite={() => {
+          if (typeof window !== 'undefined') {
+            try {
+              window.history.pushState(null, '', '/');
+            } catch (e) {}
+          }
+          setIsAdminRoute(false);
+        }}
+        onPreviewDraft={(draft) => {
+          setPreviewDraftData(draft);
+          setIsAdminRoute(false);
+          if (typeof window !== 'undefined') {
+            try {
+              window.history.pushState(null, '', '/?preview=draft');
+            } catch (e) {}
+          }
+        }}
+        onPublishSuccess={(published) => {
+          setProperties(published.properties);
+          setContactConfig(published.siteSettings.contact);
+          setBookingUrls(published.siteSettings.bookingUrls);
+          if (published.blogPosts) setActiveBlogPosts(published.blogPosts);
+          setPreviewDraftData(null);
+        }}
+      />
+    );
+  }
+
+  // Choose between active live data or draft preview
+  const displayProperties = previewDraftData?.properties || properties;
+  const displayBlogPosts = previewDraftData?.blogPosts || activeBlogPosts;
+  const displayContact = previewDraftData?.siteSettings?.contact || contactConfig;
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2C221E] flex flex-col font-sans">
+      {/* Draft Preview Bar Banner (when in preview mode) */}
+      {previewDraftData && (
+        <div className="sticky top-0 z-50 bg-[#1B2A4A] text-white px-4 py-2.5 text-xs flex items-center justify-between border-b border-[#C5A880]/50 shadow-lg">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="font-semibold text-[#E5DFC5]">PREVIEW MODE:</span>
+            <span className="text-[#FAF8F5] hidden sm:inline">Viewing Unpublished Draft Changes</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleOpenAdmin}
+              className="bg-[#C5A880] text-[#111A2E] px-3 py-1 rounded font-bold hover:bg-[#B38F56] transition-colors cursor-pointer"
+            >
+              Return to Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPreviewDraftData(null);
+                if (typeof window !== 'undefined') {
+                  try {
+                    window.history.pushState(null, '', '/');
+                  } catch (e) {}
+                }
+              }}
+              className="text-white/80 hover:text-white underline cursor-pointer"
+            >
+              Exit Preview
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Navigation */}
       <Navbar
         currentLang={currentLang}
         onLanguageChange={handleLanguageChange}
         onNavigate={handleNavigate}
-        onOpenOwnerPortal={() => setOwnerPortalOpen(true)}
+        onOpenOwnerPortal={handleOpenAdmin}
         onOpenSemLanding={() => setSemLandingOpen(true)}
       />
 
@@ -284,7 +397,7 @@ export default function App() {
 
         {/* Search & Reservation Bar */}
         <SearchWidget
-          properties={properties}
+          properties={displayProperties}
           currentLang={currentLang}
           onSelectPropertyDetails={handleSelectProperty}
         />
@@ -297,7 +410,7 @@ export default function App() {
 
         {/* Our 5 Properties */}
         <PropertiesSection
-          properties={properties}
+          properties={displayProperties}
           currentLang={currentLang}
           onSelectProperty={handleSelectProperty}
           onOpenWhatsAppInquiry={handleOpenWhatsAppInquiry}
@@ -315,7 +428,7 @@ export default function App() {
         {/* Special Offers */}
         <SpecialOffersSection
           currentLang={currentLang}
-          properties={properties}
+          properties={displayProperties}
           onSelectProperty={handleSelectProperty}
           onOpenWhatsAppInquiry={handleOpenWhatsAppInquiry}
         />
@@ -336,8 +449,8 @@ export default function App() {
 
         {/* Contact Us & Direct Inquiry Form */}
         <ContactSection
-          properties={properties}
-          contactConfig={contactConfig}
+          properties={displayProperties}
+          contactConfig={displayContact}
           currentLang={currentLang}
         />
 
@@ -347,14 +460,14 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        properties={properties}
-        contactConfig={contactConfig}
+        properties={displayProperties}
+        contactConfig={displayContact}
         currentLang={currentLang}
         onSelectProperty={handleSelectProperty}
         onNavigate={handleNavigate}
         onOpenTerms={() => setLegalModal('terms')}
         onOpenPrivacy={() => setLegalModal('privacy')}
-        onOpenOwnerPortal={() => setOwnerPortalOpen(true)}
+        onOpenOwnerPortal={handleOpenAdmin}
         onOpenSemLanding={() => setSemLandingOpen(true)}
       />
 
@@ -389,17 +502,21 @@ export default function App() {
         />
       )}
 
-      {/* Owner Dashboard Modal */}
+      {/* Full CMS Owner Admin Dashboard */}
       {ownerPortalOpen && (
-        <OwnerDashboardModal
-          properties={properties}
-          bookingUrls={bookingUrls}
-          contactConfig={contactConfig}
-          onClose={() => setOwnerPortalOpen(false)}
-          onSaveBookingUrls={handleSaveBookingUrls}
-          onSaveContact={handleSaveContact}
-          onSaveProperties={handleSaveProperties}
-          onResetDefaults={handleResetDefaults}
+        <AdminDashboard
+          onBackToSite={() => setOwnerPortalOpen(false)}
+          onPreviewDraft={(draft) => {
+            setPreviewDraftData(draft);
+            setOwnerPortalOpen(false);
+          }}
+          onPublishSuccess={(published) => {
+            setProperties(published.properties);
+            setContactConfig(published.siteSettings.contact);
+            setBookingUrls(published.siteSettings.bookingUrls);
+            if (published.blogPosts) setActiveBlogPosts(published.blogPosts);
+            setPreviewDraftData(null);
+          }}
         />
       )}
 
